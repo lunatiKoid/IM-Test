@@ -46,9 +46,10 @@ public class LoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		
         // Set up the window layout
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		//requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.user_login);
 		
+        //
 		context = this;
 		
 		loginButton = (Button) findViewById(R.id.loginButton);

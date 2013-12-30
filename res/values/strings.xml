@@ -33,4 +33,5 @@
     <string name="title_connecting">connecting...</string>
     <string name="title_connected_to">connected: </string>
     <string name="title_not_connected">not connected</string>
+    <string name="trade_message_text_view">贸易消息中心</string>
 </resources>

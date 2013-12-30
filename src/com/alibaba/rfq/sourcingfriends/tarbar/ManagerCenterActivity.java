@@ -40,6 +40,8 @@ public class ManagerCenterActivity extends ActivityGroup implements OnCheckedCha
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.tabbar);
 		
+		
+		// 
 		contentViewLayout = (LinearLayout) findViewById(R.id.contentViewLayout);
 		tabBar = (RadioGroup) findViewById(R.id.tabBar);
 		tabBar.setOnCheckedChangeListener(this);

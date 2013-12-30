@@ -3,23 +3,23 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-    
-    
     <LinearLayout
         android:id="@+id/contentViewLayout"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_marginBottom="57dip"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/tabBar"
         android:orientation="vertical" />
 
     <RadioGroup
         android:id="@+id/tabBar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-		android:layout_alignParentBottom="true"
-		android:layout_marginBottom="1dip"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="1dip"
         android:orientation="horizontal" >
-
     </RadioGroup>
 
 </RelativeLayout>
