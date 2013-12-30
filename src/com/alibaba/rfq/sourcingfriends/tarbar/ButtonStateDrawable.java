@@ -15,6 +15,7 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.Paint.Align;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 public class ButtonStateDrawable extends Drawable {
 	private int label;
@@ -35,17 +36,13 @@ public class ButtonStateDrawable extends Drawable {
 		this.label = deposit;
 		this.onState = onState;
 		if (onState) {
-			labelShader = new LinearGradient(0, 0, 0, 10, new int[] {
-					Color.WHITE, Color.LTGRAY }, null, Shader.TileMode.MIRROR);
+			// 字的颜色的渐变色的设置
+			labelShader = new LinearGradient(0, 0, 0, 10, new int[] {Color.DKGRAY, Color.DKGRAY }, null, Shader.TileMode.MIRROR);
 		} else {
 			labelShader = new LinearGradient(0, 0, 0, 10, new int[] {
-					Color.LTGRAY, Color.DKGRAY }, null, Shader.TileMode.MIRROR);
+					Color.DKGRAY, Color.DKGRAY }, null, Shader.TileMode.MIRROR);
 
-			// this.bitmap =
-			// BitmapFactory.decodeResource(context.getResources(),
-			// imageId).extractAlpha();
-			this.bitmap = BitmapFactory.decodeResource(context.getResources(),
-					imageId);
+			this.bitmap = BitmapFactory.decodeResource(context.getResources(),imageId);
 		}
 	}
 
@@ -53,12 +50,14 @@ public class ButtonStateDrawable extends Drawable {
 	public void draw(Canvas canvas) {
 		int bwidth = bitmap.getWidth();
 		int bheight = bitmap.getHeight();
-
+		
+		
+		
 		int x = (WIDTH - bwidth) / 2;
 		int y = 4;
 		Paint p = new Paint();
 		p.setAntiAlias(true);
-		p.setTextSize(10);
+		p.setTextSize(33);
 		p.setFakeBoldText(true);
 		p.setTextAlign(Align.CENTER);
 		p.setShader(labelShader);
@@ -72,6 +71,9 @@ public class ButtonStateDrawable extends Drawable {
 			// this.bitmap =
 			// BitmapFactory.decodeResource(context.getResources(), imageId);
 			p.setShader(null);
+			
+			Log.i("ButtonStateDrawable","w="+bwidth+",h="+bheight+",x="+x+",y="+y+",width="+WIDTH);
+			
 			Shader bgShader = new LinearGradient(
 					15,
 					y - 1,

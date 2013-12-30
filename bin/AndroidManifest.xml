@@ -30,7 +30,12 @@
         <activity android:name="com.alibaba.rfq.sourcingfriends.contactlist.ContactListActivity"></activity>
         <activity android:name=".tarbar.ManagerCenterActivity"></activity>
         <activity android:name=".service.DeviceListActivity"></activity>
-        <activity android:name=".msgcenter.IngMessageActivity"></activity>
+
+        <activity 
+            android:name=".msgcenter.IngMessageActivity" 
+            android:windowSoftInputMode="adjustResize">
+        </activity>        
+         
         <activity android:name=".contactlist.UserDetailActivity"></activity>
     </application>
 

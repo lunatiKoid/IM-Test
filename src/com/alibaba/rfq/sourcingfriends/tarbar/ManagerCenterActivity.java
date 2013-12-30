@@ -15,6 +15,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -67,6 +68,8 @@ public class ManagerCenterActivity extends ActivityGroup implements OnCheckedCha
 		WindowManager windowManager = getWindowManager();
 		int windowWidth = windowManager.getDefaultDisplay().getWidth();
 
+		Log.i("ManagerCenterActivity",""+windowWidth);
+		
 		int btnNum = windowWidth / 64;
 
 		if (buttonList.size() < btnNum) {
@@ -91,9 +94,10 @@ public class ManagerCenterActivity extends ActivityGroup implements OnCheckedCha
 
 		contentViewLayout.removeAllViews();
 		TabBarButton btn = (TabBarButton) tabBar.getChildAt(index);
+		
 		View tabView = getLocalActivityManager().startActivity(
-				getResources().getString(btn.getLabel()), btn.getIntent())
-				.getDecorView();
+				getResources().getString(btn.getLabel()), btn.getIntent()
+				).getDecorView();
 
 		contentViewLayout.addView(tabView, new LinearLayout.LayoutParams(
 				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
