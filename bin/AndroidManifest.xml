@@ -25,7 +25,7 @@
             </intent-filter>
         </activity>
         <activity android:name="LoginActivity"></activity>
-        <activity android:name="com.alibaba.rfq.sourcingfriends.msgcenter.TradeMessageActivity"></activity>
+        <activity android:name="com.alibaba.rfq.sourcingfriends.msgcenter.TradeMessageActivity" android:theme="@style/TradeMsgTheme"></activity>
         <activity android:name="com.alibaba.rfq.sourcingfriends.contactlist.ContactListActivity"></activity>
         <activity android:name=".tarbar.ManagerCenterActivity"></activity>
         <activity android:name=".service.DeviceListActivity"></activity>
