@@ -29,39 +29,43 @@ public final class R {
         public static final int ic_launcher=0x7f020001;
         public static final int tabbar_contact=0x7f020002;
         public static final int tabbar_msg=0x7f020003;
+        public static final int yliang=0x7f020004;
     }
     public static final class id {
         public static final int ContactListViewId=0x7f090000;
         public static final int IngMsgListViewId=0x7f090007;
         public static final int ItemText=0x7f09000a;
-        public static final int NameTextView=0x7f090010;
+        public static final int MyImageView=0x7f09000d;
+        public static final int NameTextView=0x7f090013;
         public static final int Text4SendEditText=0x7f090008;
-        public static final int TradeMsgListViewId=0x7f09000e;
+        public static final int TheiMsgTextView=0x7f09000c;
+        public static final int TradeMsgListViewId=0x7f090011;
         public static final int User2TalkTextView=0x7f090006;
-        public static final int accountEditText=0x7f090016;
-        public static final int accountRelativeLayout=0x7f090014;
-        public static final int accountTextView=0x7f090015;
-        public static final int action_settings=0x7f09001b;
+        public static final int UserImageView=0x7f09000b;
+        public static final int accountEditText=0x7f090019;
+        public static final int accountRelativeLayout=0x7f090017;
+        public static final int accountTextView=0x7f090018;
+        public static final int action_settings=0x7f09001e;
         public static final int button_scan=0x7f090005;
         public static final int button_send=0x7f090009;
-        public static final int companeyTextView=0x7f090012;
-        public static final int contentViewLayout=0x7f09000b;
-        public static final int discoverable=0x7f09001e;
-        public static final int insecure_connect_scan=0x7f09001d;
-        public static final int loginButton=0x7f09001a;
+        public static final int companeyTextView=0x7f090015;
+        public static final int contentViewLayout=0x7f09000e;
+        public static final int discoverable=0x7f090021;
+        public static final int insecure_connect_scan=0x7f090020;
+        public static final int loginButton=0x7f09001d;
         public static final int new_devices=0x7f090004;
         public static final int paired_devices=0x7f090002;
-        public static final int passwdEditText=0x7f090019;
-        public static final int passwdRelativeLayout=0x7f090017;
-        public static final int passwdTextView=0x7f090018;
-        public static final int secure_connect_scan=0x7f09001c;
-        public static final int tabBar=0x7f09000c;
-        public static final int textView1=0x7f09000f;
-        public static final int textView2=0x7f090011;
-        public static final int titleTextView=0x7f090013;
+        public static final int passwdEditText=0x7f09001c;
+        public static final int passwdRelativeLayout=0x7f09001a;
+        public static final int passwdTextView=0x7f09001b;
+        public static final int secure_connect_scan=0x7f09001f;
+        public static final int tabBar=0x7f09000f;
+        public static final int textView1=0x7f090012;
+        public static final int textView2=0x7f090014;
+        public static final int titleTextView=0x7f090016;
         public static final int title_new_devices=0x7f090003;
         public static final int title_paired_devices=0x7f090001;
-        public static final int tradeMsgTitleRelativeLayout=0x7f09000d;
+        public static final int tradeMsgTitleRelativeLayout=0x7f090010;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
@@ -71,10 +75,11 @@ public final class R {
         public static final int ing_message=0x7f030004;
         public static final int main_list_view_item=0x7f030005;
         public static final int message=0x7f030006;
-        public static final int tabbar=0x7f030007;
-        public static final int trade_message=0x7f030008;
-        public static final int user_detail=0x7f030009;
-        public static final int user_login=0x7f03000a;
+        public static final int msging_list_view_item=0x7f030007;
+        public static final int tabbar=0x7f030008;
+        public static final int trade_message=0x7f030009;
+        public static final int user_detail=0x7f03000a;
+        public static final int user_login=0x7f03000b;
     }
     public static final class menu {
         public static final int main=0x7f080000;

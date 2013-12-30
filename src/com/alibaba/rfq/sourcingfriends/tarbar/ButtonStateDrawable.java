@@ -74,18 +74,23 @@ public class ButtonStateDrawable extends Drawable {
 			
 			Log.i("ButtonStateDrawable","w="+bwidth+",h="+bheight+",x="+x+",y="+y+",width="+WIDTH);
 			
+			int x_st =15;
+			int y_st=y-1;
+			int x_ed=WIDTH-15;
+			int y_ed=32+y+1 ;
+			
 			Shader bgShader = new LinearGradient(
-					15,
-					y - 1,
-					WIDTH - 15,
-					32 + y + 1,
+					x_st,
+					y_st,
+					x_ed,
+					y_ed,
 					new int[] {
 							context.getResources().getColor(R.color.tabbar_1),	// color should be changed
 							context.getResources().getColor(R.color.tabbar_2) }, // 
 					null, Shader.TileMode.CLAMP);
 			p.setShader(bgShader);
 			p.setStyle(Paint.Style.FILL);
-			RectF rect = new RectF(15, y - 1, WIDTH - 15, 32 + y + 1);
+			RectF rect = new RectF( x_st, y_st, x_ed, y_ed );
 			canvas.drawRoundRect(rect, 5.0f, 5.0f, p);
 		}
 		canvas.drawBitmap(bitmap, x, y, p);
