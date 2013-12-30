@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+
+
+   <RelativeLayout
+       android:id="@+id/accountRelativeLayout"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_alignParentLeft="true"
+       android:layout_alignParentRight="true" >
+
+       <TextView
+           android:id="@+id/accountTextView"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_alignParentLeft="true"
+           android:layout_alignTop="@+id/accountEditText"
+           android:layout_marginLeft="18dp"
+           android:text="Account" />
+
+       <EditText
+           android:id="@+id/accountEditText"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_alignParentTop="true"
+           android:layout_marginTop="109dp"
+           android:layout_toRightOf="@+id/accountTextView"
+           android:ems="10" />
+   </RelativeLayout>
+
+   <RelativeLayout
+       android:id="@+id/passwdRelativeLayout"
+       android:layout_width="wrap_content"
+       android:layout_height="30dp"
+       android:layout_alignParentLeft="true"
+       android:layout_alignParentRight="true"
+       android:layout_below="@+id/accountRelativeLayout"
+       android:layout_marginTop="26dp" >
+
+       <TextView
+           android:id="@+id/passwdTextView"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_alignParentLeft="true"
+           android:layout_alignTop="@+id/passwdEditText"
+           android:layout_marginLeft="18dp"
+           android:text="passwd" />
+
+       <EditText
+           android:id="@+id/passwdEditText"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_alignParentTop="true"
+           android:layout_toRightOf="@+id/passwdTextView"
+           android:ems="10" />
+   </RelativeLayout>
+
+   <Button
+       android:id="@+id/loginButton"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_alignParentLeft="true"
+       android:layout_alignRight="@+id/passwdRelativeLayout"
+       android:layout_below="@+id/passwdRelativeLayout"
+       android:layout_marginTop="47dp"
+       android:text="Login" />
+   
+</RelativeLayout>
