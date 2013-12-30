@@ -5,6 +5,7 @@ import com.alibaba.rfq.sourcingfriends.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Window;
 import android.widget.TextView;
 
 public class UserDetailActivity extends Activity {
@@ -16,6 +17,8 @@ public class UserDetailActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.user_detail);
 	
 		Intent intent=getIntent();

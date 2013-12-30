@@ -14,58 +14,59 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class TradeMessageActivity extends Activity {
-	
+
 	private ListView tradeMsgListView;
-	List<String> listData ;
+	List<String> listData;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		requestWindowFeature(Window.FEATURE_NO_TITLE); 
+
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.trade_message);
-        
+
 		listData = getData();
-        TradeMsgAdapter tradeMsgAdapter = new TradeMsgAdapter(this,getData());
-        tradeMsgListView.setAdapter(tradeMsgAdapter);
-        tradeMsgListView.setOnItemClickListener( new OnItemClickListener(){
+		TradeMsgAdapter tradeMsgAdapter = new TradeMsgAdapter(this, getData());
+		tradeMsgListView.setAdapter(tradeMsgAdapter);
+		tradeMsgListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parent, View v, int position,
-					long id ) {
+			public void onItemClick(AdapterView<?> parent, View v,
+					int position, long id) {
 				// TODO Auto-generated method stub
-                
-				
+
 				{
 					Intent intent = new Intent();
 					intent.putExtra("UserId", listData.get(position));
-					intent.setClass(TradeMessageActivity.this, IngMessageActivity.class);
+					intent.setClass(TradeMessageActivity.this,
+							IngMessageActivity.class);
 					startActivity(intent);
 				}
-				
-				Toast.makeText(getApplicationContext(),"click "+listData.get(position),Toast.LENGTH_SHORT).show();
-			} 
-        	
-        }) ;
+
+				Toast.makeText(getApplicationContext(),
+						"click " + listData.get(position), Toast.LENGTH_SHORT)
+						.show();
+			}
+
+		});
 	}
 
+	private List<String> getData() {
+		List<String> data = new ArrayList<String>();
 
-	 private List<String> getData() {
-	    	List<String> data = new ArrayList<String>() ;
-	    	
-	    	data.add("1");
-	    	data.add("2");
-	    	data.add("3");
-	    	data.add("4");
-	    	data.add("5");
-	    	data.add("6");
-	    	data.add("7");
-	    	data.add("8");
-	    	data.add("9");
-	    	data.add("10");
-	    	data.add("11");
-	    	data.add("12");
-	    	data.add("13");
-	    	return data;
-	    }
+		data.add("1");
+		data.add("2");
+		data.add("3");
+		data.add("4");
+		data.add("5");
+		data.add("6");
+		data.add("7");
+		data.add("8");
+		data.add("9");
+		data.add("10");
+		data.add("11");
+		data.add("12");
+		data.add("13");
+		return data;
+	}
 }

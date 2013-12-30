@@ -63,7 +63,7 @@ public class DeviceListActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         // Setup the window
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        //requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.device_list);
 
         // Set result CANCELED incase the user backs out
