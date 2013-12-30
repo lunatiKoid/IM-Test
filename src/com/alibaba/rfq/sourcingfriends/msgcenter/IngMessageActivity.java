@@ -1,5 +1,8 @@
 package com.alibaba.rfq.sourcingfriends.msgcenter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.alibaba.rfq.sourcingfriends.R;
 import com.alibaba.rfq.sourcingfriends.db.DatabaseService;
 import com.alibaba.rfq.sourcingfriends.dto.UserProfileDTO;
@@ -52,7 +55,8 @@ public class IngMessageActivity extends Activity {
 	// Name of the connected device
 	private String mConnectedDeviceName = null;
 	// Array adapter for the conversation thread
-	private ArrayAdapter<String> mConversationArrayAdapter;
+	// private ArrayAdapter<String> mConversationArrayAdapter;
+	private IngMessageAdapter mConversationIngMsgAdapter;
 	// String buffer for outgoing messages
 	private StringBuffer mOutStringBuffer;
 	// Member object for the chat services
@@ -72,7 +76,10 @@ public class IngMessageActivity extends Activity {
 
 	// Local Bluetooth adapter
 	private BluetoothAdapter mBluetoothAdapter = null;
-
+	private DatabaseService service = null;
+	private UserProfileDTO she = null ;
+	private UserProfileDTO me = null ;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -88,10 +95,13 @@ public class IngMessageActivity extends Activity {
 		UserProfileDTO user = new UserProfileDTO("yliang", "1111",
 				"alibaba-inc", photo);
 
-		DatabaseService service = new DatabaseService(this);
+		service = new DatabaseService(this);
 		if (null == service.findByNamePasswd(user.getUserName(),
 				user.getPasswd()))
 			service.insertUserDO(user);
+		she = service.findByNamePasswd("yliang", "1111");
+		me = service.findByNamePasswd("yliang", "1111");
+		Log.i(TAG,""+she.getUserName()+" "+me.getId());
 		// end
 
 		// If the adapter is null, then Bluetooth is not supported
@@ -106,17 +116,28 @@ public class IngMessageActivity extends Activity {
 		userIdStr = intent.getStringExtra("UserId");
 	}
 
+	private List<String> getMsgData(int id) {
+		List<String> data = new ArrayList<String>();
+
+		data.add("she|1");
+		data.add("she|2");
+		data.add("me|3");
+		data.add("she|4");
+		data.add("me|5");
+		data.add("me|6|hello,test");
+		return data;
+	}
+
 	private void MsgIng() {
 
-		//
 		user2TalkTextView = (TextView) findViewById(R.id.User2TalkTextView);
 		user2TalkTextView.setText("user:" + userIdStr);
 
 		// Initialize the array adapter for the conversation thread
-		mConversationArrayAdapter = new ArrayAdapter<String>(this,
-				R.layout.message);
+		mConversationIngMsgAdapter = new IngMessageAdapter(this, getMsgData(0),
+				she, me);
 		mConversationView = (ListView) findViewById(R.id.IngMsgListViewId);
-		mConversationView.setAdapter(mConversationArrayAdapter);
+		mConversationView.setAdapter(mConversationIngMsgAdapter);
 
 		// Initialize the compose field with a listener for the return key
 		mOutEditText = (EditText) findViewById(R.id.Text4SendEditText);
@@ -269,7 +290,7 @@ public class IngMessageActivity extends Activity {
 				case BluetoothChatService.STATE_CONNECTED:
 					user2TalkTextView.setText(R.string.title_connected_to);
 					user2TalkTextView.append(mConnectedDeviceName);
-					mConversationArrayAdapter.clear();
+					// mConversationArrayAdapter.clear();
 					break;
 				case BluetoothChatService.STATE_CONNECTING:
 					user2TalkTextView.setText(R.string.title_connecting);
@@ -284,14 +305,13 @@ public class IngMessageActivity extends Activity {
 				byte[] writeBuf = (byte[]) msg.obj;
 				// construct a string from the buffer
 				String writeMessage = new String(writeBuf);
-				mConversationArrayAdapter.add("Me:  " + writeMessage);
+				mConversationIngMsgAdapter.send("she|" + writeMessage);
 				break;
 			case MESSAGE_READ:
 				byte[] readBuf = (byte[]) msg.obj;
 				// construct a string from the valid bytes in the buffer
 				String readMessage = new String(readBuf, 0, msg.arg1);
-				mConversationArrayAdapter.add(mConnectedDeviceName + ":  "
-						+ readMessage);
+				mConversationIngMsgAdapter.receive("me|" + readMessage);
 				break;
 			case MESSAGE_DEVICE_NAME:
 				// save the connected device's name

@@ -6,7 +6,8 @@ import com.alibaba.rfq.sourcingfriends.R;
 import com.alibaba.rfq.sourcingfriends.dto.UserProfileDTO;
 
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +16,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class IngMessageAdapter extends BaseAdapter {
-
-	private LayoutInflater mInflater;
 
 	private List<String> listData;
 	private Context context;
@@ -27,12 +26,22 @@ public class IngMessageAdapter extends BaseAdapter {
 	public IngMessageAdapter(Context context, List<String> listData,
 			UserProfileDTO she, UserProfileDTO me) {
 		this.context = context;
-		this.mInflater = LayoutInflater.from(context);
 		this.listData = listData;
 		this.useri = she;
 		this.myself = me;
 	}
 
+	
+	public void receive(String data){  
+        listData.add(data);  
+        this.notifyDataSetChanged();  
+    }
+	
+	public void send(String data){  
+        listData.add(data);  
+        this.notifyDataSetChanged();  
+    }
+	
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
@@ -50,7 +59,7 @@ public class IngMessageAdapter extends BaseAdapter {
 		// TODO Auto-generated method stub
 		return position;
 	}
-
+	
 	public class ViewHolder {
 		ImageView userImageView;
 		TextView theiMessage;
@@ -83,10 +92,30 @@ public class IngMessageAdapter extends BaseAdapter {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
 
-		viewHolder.userImageView.setImageBitmap(useri.getPhoto());
-		viewHolder.myImageView.setImageBitmap(myself.getPhoto());
-		viewHolder.theiMessage.setText(listData.get(position));
-
+		
+		String str = listData.get(position);
+		int index = str.indexOf("|");
+		String msg = str.substring(index+1);
+		String who = str.substring(0, index);
+		viewHolder.theiMessage.setText(msg);
+		
+		if( who.equalsIgnoreCase("she") )
+		{
+			viewHolder.userImageView.setImageBitmap(useri.getPhoto());
+			viewHolder.theiMessage.setGravity(Gravity.LEFT);
+			viewHolder.userImageView.setVisibility(View.VISIBLE);
+			viewHolder.myImageView.setVisibility(View.INVISIBLE);
+			
+		}
+		else
+		{
+			viewHolder.myImageView.setImageBitmap(myself.getPhoto());
+			viewHolder.theiMessage.setGravity(Gravity.RIGHT);
+			viewHolder.userImageView.setVisibility(View.INVISIBLE);
+			viewHolder.myImageView.setVisibility(View.VISIBLE);
+			
+		}
+		Log.i("IngMsgAdapter",""+listData.get(position));
 		// convertView.setOnClickListener( new OnClickListener(){
 		//
 		// public void onClick(View v) {
