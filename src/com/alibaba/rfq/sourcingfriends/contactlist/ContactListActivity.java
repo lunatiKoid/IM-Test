@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import com.alibaba.rfq.sourcingfriends.R;
 import com.alibaba.rfq.sourcingfriends.msgcenter.IngMessageActivity;
-import com.alibaba.rfq.sourcingfriends.msgcenter.TradeMessageActivity;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -41,7 +39,7 @@ public class ContactListActivity extends Activity {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent();
 				intent.putExtra("UserId", listData.get(position));
-				intent.setClass(ContactListActivity.this, UserDetailActivity.class);
+				intent.setClass(ContactListActivity.this, IngMessageActivity.class);
 				startActivity(intent);
 				Toast.makeText(getApplicationContext(),"click "+listData.get(position),Toast.LENGTH_SHORT).show();
 			} 

@@ -5,25 +5,29 @@
     >
 	
 	<ImageView
-		android:id="@+id/UserImageView"  
-        android:layout_width="wrap_content"  
-        android:layout_height="wrap_content"  
+	    android:id="@+id/UserImageView"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
 	    android:layout_alignParentLeft="true"
 	    android:layout_weight="1"
-	    />    
-    <TextView  
-        android:id="@+id/TheiMsgTextView"  
-        android:layout_width="wrap_content"  
-        android:layout_height="wrap_content"  
-        android:gravity="center_vertical"
+	    android:minWidth="22dp" />
+
+    <TextView
+        android:id="@+id/TheiMsgTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/UserImageView"
+        android:layout_toLeftOf="@+id/MyImageView"
         android:layout_weight="10"
-        android:text="hello world,this msg showing"
-         />  
+        android:gravity="center_vertical"
+        android:text="this msg showing" />
+  
     <ImageView
-		android:id="@+id/MyImageView"  
-        android:layout_width="wrap_content"  
-        android:layout_height="wrap_content"  
-	    android:layout_alignParentRight="true"
-	    android:layout_weight="1"
-	    />
+        android:id="@+id/MyImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_weight="1"
+        android:minWidth="22dp" />
+
 </RelativeLayout>

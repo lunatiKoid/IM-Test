@@ -51,4 +51,22 @@
         android:gravity="center"
         android:text="user's details" />
 
+    <ImageView
+        android:id="@+id/userPhotoImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView2"
+        android:layout_below="@+id/textView3"
+        android:layout_marginTop="36dp"
+        android:src="@android:drawable/alert_dark_frame" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/userPhotoImageView"
+        android:layout_below="@+id/companeyTextView"
+        android:layout_marginTop="55dp"
+        android:text="photo" />
+
 </RelativeLayout>

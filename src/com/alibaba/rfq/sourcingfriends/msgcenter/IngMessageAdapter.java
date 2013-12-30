@@ -3,13 +3,17 @@ package com.alibaba.rfq.sourcingfriends.msgcenter;
 import java.util.List;
 
 import com.alibaba.rfq.sourcingfriends.R;
+import com.alibaba.rfq.sourcingfriends.contactlist.ContactListActivity;
+import com.alibaba.rfq.sourcingfriends.contactlist.UserDetailActivity;
 import com.alibaba.rfq.sourcingfriends.dto.UserProfileDTO;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -102,6 +106,15 @@ public class IngMessageAdapter extends BaseAdapter {
 		if( who.equalsIgnoreCase("she") )
 		{
 			viewHolder.userImageView.setImageBitmap(useri.getPhoto());
+			viewHolder.userImageView.setOnClickListener( new OnClickListener(){
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					Intent intent = new Intent();
+					intent.putExtra("UserId", ""+useri.getId());
+					intent.setClass(context, UserDetailActivity.class);
+					context.startActivity(intent);
+				}});
 			viewHolder.theiMessage.setGravity(Gravity.LEFT);
 			viewHolder.userImageView.setVisibility(View.VISIBLE);
 			viewHolder.myImageView.setVisibility(View.INVISIBLE);
@@ -110,12 +123,22 @@ public class IngMessageAdapter extends BaseAdapter {
 		else
 		{
 			viewHolder.myImageView.setImageBitmap(myself.getPhoto());
+			viewHolder.myImageView.setOnClickListener( new OnClickListener(){
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					Intent intent = new Intent();
+					intent.putExtra("UserId", ""+myself.getId());
+					intent.setClass(context, UserDetailActivity.class);
+					context.startActivity(intent);
+				}});
 			viewHolder.theiMessage.setGravity(Gravity.RIGHT);
 			viewHolder.userImageView.setVisibility(View.INVISIBLE);
 			viewHolder.myImageView.setVisibility(View.VISIBLE);
 			
 		}
 		Log.i("IngMsgAdapter",""+listData.get(position));
+		
 		// convertView.setOnClickListener( new OnClickListener(){
 		//
 		// public void onClick(View v) {
