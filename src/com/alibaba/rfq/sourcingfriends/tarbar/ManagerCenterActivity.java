@@ -16,6 +16,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
@@ -35,6 +36,8 @@ public class ManagerCenterActivity extends ActivityGroup implements OnCheckedCha
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.tabbar);
 		
 		contentViewLayout = (LinearLayout) findViewById(R.id.contentViewLayout);

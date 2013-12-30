@@ -27,10 +27,8 @@ public final class R {
     public static final class drawable {
         public static final int bottom_bar_highlight=0x7f020000;
         public static final int ic_launcher=0x7f020001;
-        public static final int ic_launcher_email=0x7f020002;
-        public static final int tabbar_contact=0x7f020003;
-        public static final int tabbar_msg=0x7f020004;
-        public static final int title_bg=0x7f020005;
+        public static final int tabbar_contact=0x7f020002;
+        public static final int tabbar_msg=0x7f020003;
     }
     public static final class id {
         public static final int ContactListViewId=0x7f090000;
@@ -75,9 +73,8 @@ public final class R {
         public static final int message=0x7f030006;
         public static final int tabbar=0x7f030007;
         public static final int trade_message=0x7f030008;
-        public static final int trade_msg_title=0x7f030009;
-        public static final int user_detail=0x7f03000a;
-        public static final int user_login=0x7f03000b;
+        public static final int user_detail=0x7f030009;
+        public static final int user_login=0x7f03000a;
     }
     public static final class menu {
         public static final int main=0x7f080000;
@@ -139,9 +136,5 @@ public final class R {
  All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f070001;
-        /**  added by liang.yaol 
-         */
-        public static final int CustomWindowTitleBackground=0x7f070002;
-        public static final int TradeMsgTheme=0x7f070003;
     }
 }
