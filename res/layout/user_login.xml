@@ -67,5 +67,42 @@
        android:layout_below="@+id/passwdRelativeLayout"
        android:layout_marginTop="47dp"
        android:text="Login" />
+
+   <Button
+       android:id="@+id/jPostButton"
+       style="?android:attr/buttonStyleSmall"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_alignTop="@+id/jGetButton"
+       android:layout_toRightOf="@+id/jGetButton"
+       android:text="javaPost" />
+
+   <Button
+       android:id="@+id/aGetButton"
+       style="?android:attr/buttonStyleSmall"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_alignTop="@+id/jPostButton"
+       android:layout_toRightOf="@+id/jPostButton"
+       android:text="apacheGet" />
+
+   <Button
+       android:id="@+id/aPostButton"
+       style="?android:attr/buttonStyleSmall"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_alignTop="@+id/aGetButton"
+       android:layout_toRightOf="@+id/aGetButton"
+       android:text="apachePost" />
+
+   <Button
+       android:id="@+id/jGetButton"
+       style="?android:attr/buttonStyleSmall"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_alignParentLeft="true"
+       android:layout_below="@+id/loginButton"
+       android:layout_marginTop="40dp"
+       android:text="javaGet" />
    
 </RelativeLayout>
