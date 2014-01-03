@@ -41,12 +41,6 @@ public class LoginActivity extends Activity {
 	// Bluetooth service is ok
 	private boolean isServiceOk = false;
 
-	// test node.js
-	private Button jGetButton;
-	private Button jPostButton;
-	private Button aGetButton;
-	private Button aPostButton;
-	private String result;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -88,37 +82,6 @@ public class LoginActivity extends Activity {
 			}
 		});
 
-		// test node.js
-		jGetButton = (Button) findViewById(R.id.jGetButton);
-		jPostButton = (Button) findViewById(R.id.jPostButton);
-		aGetButton = (Button) findViewById(R.id.aGetButton);
-		aPostButton = (Button) findViewById(R.id.aPostButton);
-
-		jGetButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				new Thread(runnable).start();
-			}
-		});
-		jPostButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-			}
-		});
-		aGetButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-			}
-		});
-		aPostButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-			}
-		});
 	}
 
 	// thread
@@ -128,31 +91,23 @@ public class LoginActivity extends Activity {
 			super.handleMessage(msg);
 			Bundle data = msg.getData();
 			String val = data.getString("error");
-			if (val == null)
-				val = data.getString("value");
+			if (val != null) {
+				Toast.makeText(context, "err", Toast.LENGTH_SHORT).show();
+			} else if ((val = data.getString("jGet:value")) != null) {
+				Toast.makeText(context, val, Toast.LENGTH_SHORT).show();
+			} else if ((val = data.getString("jPost:value")) != null) {
+				Toast.makeText(context, val, Toast.LENGTH_SHORT).show();
+			} else if ((val = data.getString("aGet:value")) != null) {
+				Toast.makeText(context, val, Toast.LENGTH_SHORT).show();
+			} else if ((val = data.getString("aPost:value")) != null) {
+				Toast.makeText(context, val, Toast.LENGTH_SHORT).show();
+			} else
+				Toast.makeText(context, "err", Toast.LENGTH_SHORT).show();
 
-			Toast.makeText(context, "javaGet+" + val, Toast.LENGTH_SHORT)
-					.show();
+			// Toast.makeText(context, "javaGet+" + val,
+			// Toast.LENGTH_SHORT).show();
 
-			Log.i("mylog", "请求结果为-->" + val);
-		}
-	};
-
-	Runnable runnable = new Runnable() {
-		@Override
-		public void run() {
-			// TODO: http request.
-			Message msg = new Message();
-			Bundle data = new Bundle();
-
-			result = NodeJSConstant.javaGet();
-			if (null != result)
-				data.putString("value", result);
-			else
-				data.putString("error", "javaGet:err");
-
-			msg.setData(data);
-			handler.sendMessage(msg);
+			Log.i("login", "请求结果为-->" + val);
 		}
 	};
 

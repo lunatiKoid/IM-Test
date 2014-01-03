@@ -58,8 +58,8 @@ public class NodeJSConstant {
 		try {
 			urlConnection = (HttpURLConnection) url.openConnection();
 		} catch (IOException e) {
-			//textView1.setText(e.getMessage());
-			Log.i("NODE_JS","javaGet+1"+e.getMessage());
+			// textView1.setText(e.getMessage());
+			Log.i("NODE_JS", "javaGet+1" + e.getMessage());
 			return null;
 		}
 		// method The default value is "GET".
@@ -77,10 +77,11 @@ public class NodeJSConstant {
 		try {
 			urlConnection = (HttpURLConnection) url.openConnection();
 		} catch (IOException e) {
-			//textView1.setText(e.getMessage());
-			Log.i("NODE_JS","javaPost+1"+e.getMessage());
+			// textView1.setText(e.getMessage());
+			Log.i("NODE_JS", "javaPost+1" + e.getMessage());
 			return null;
 		}
+
 		try {
 			urlConnection.setRequestMethod("POST");
 		} catch (ProtocolException e) {
@@ -94,8 +95,8 @@ public class NodeJSConstant {
 			out = new BufferedOutputStream(urlConnection.getOutputStream());// «Î«Û
 		} catch (IOException e) {
 			urlConnection.disconnect();
-			//textView1.setText(e.getMessage());
-			Log.i("NODE_JS","javaPost+2"+e.getMessage());
+			// textView1.setText(e.getMessage());
+			Log.i("NODE_JS", "javaPost+2" + e.getMessage());
 			return null;
 		}
 
@@ -104,17 +105,19 @@ public class NodeJSConstant {
 			str = URLEncoder.encode("◊•Õ€", "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 		}
+		
 		Writer writer = null;
 		try {
 			writer = new OutputStreamWriter(out, "UTF-8");
 		} catch (UnsupportedEncodingException e1) {
 		}
+		
 		try {
 			writer.write("name=javaPost" + str);
 		} catch (IOException e) {
 			urlConnection.disconnect();
-			//textView1.setText(e.getMessage());
-			Log.i("NODE_JS","javaPost+3"+e.getMessage());
+			// textView1.setText(e.getMessage());
+			Log.i("NODE_JS", "javaPost+3" + e.getMessage());
 			return null;
 		} finally {
 			try {
@@ -146,13 +149,29 @@ public class NodeJSConstant {
 		return getResponseApache(request);
 	}
 
+	public static String apachePost(String tem1,String tem2) {
+		HttpPost request = new HttpPost(NODEJS_SERVER_URL);
+
+		List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+		params.add(new BasicNameValuePair("name", tem1));
+		params.add(new BasicNameValuePair("code", tem2));
+		HttpEntity formEntity = null;
+		try {
+			formEntity = new UrlEncodedFormEntity(params, HTTP.UTF_8);
+		} catch (UnsupportedEncodingException e) {
+		}
+		request.setEntity(formEntity);
+		return getResponseApache(request);
+	}
+	
 	private static String getResponseJava(HttpURLConnection urlConnection) {
+
 		InputStream in = null;
 		try {
 			in = new BufferedInputStream(urlConnection.getInputStream());// œÏ”¶
 		} catch (IOException e) {
 			urlConnection.disconnect();
-			Log.i("NODE_JS","getResponseJava+1"+e.getMessage());
+			Log.i("NODE_JS", "getResponseJava+1" + e.getMessage());
 			return null;
 		}
 
@@ -161,14 +180,14 @@ public class NodeJSConstant {
 			reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
 		} catch (UnsupportedEncodingException e1) {
 		}
-		StringBuilder result = new StringBuilder();
+		StringBuilder sresult = new StringBuilder();
 		String tmp = null;
 		try {
 			while ((tmp = reader.readLine()) != null) {
-				result.append(tmp);
+				sresult.append(tmp);
 			}
 		} catch (IOException e) {
-			Log.i("NODE_JS","getResponseJava+2"+e.getMessage());
+			Log.i("NODE_JS", "getResponseJava+2" + e.getMessage());
 			return null;
 		} finally {
 			try {
@@ -177,27 +196,25 @@ public class NodeJSConstant {
 			} catch (IOException e) {
 			}
 		}
-		return result.toString();
+		return sresult.toString();
 	}
 
 	private static String getResponseApache(HttpUriRequest request) {
-		
 
 		HttpClient client = new DefaultHttpClient();
 		HttpResponse response = null;
 		try {
 			response = client.execute(request);
 		} catch (ClientProtocolException e) {
-			Log.i("NODE_JS","getResponseApache+1"+e.getMessage());
+			Log.i("NODE_JS", "getResponseApache+1" + e.getMessage());
 		} catch (IOException e) {
-			Log.i("NODE_JS","getResponseApache+2"+e.getMessage());
+			Log.i("NODE_JS", "getResponseApache+2" + e.getMessage());
 		}
 
 		if (response == null) {
 			return null;
 		}
-
-		String result = null;
+		String result;
 		if (response.getStatusLine().getStatusCode() == 200) {
 			try {
 				result = EntityUtils.toString(response.getEntity(), "UTF-8");
@@ -209,8 +226,7 @@ public class NodeJSConstant {
 		} else {
 			result = "error response" + response.getStatusLine().toString();
 		}
-		
 		return result;
-		
-	}	
+	}
+
 }
