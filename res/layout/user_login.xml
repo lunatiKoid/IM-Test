@@ -3,14 +3,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-
+	<EditText
+	    android:id="@+id/serverIpEditTextId"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentRight="true"
+	    android:layout_alignParentTop="true"
+	    android:text="10.0.2.2"
+	    android:ems="10" />
 
    <RelativeLayout
        android:id="@+id/accountRelativeLayout"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
        android:layout_alignParentLeft="true"
-       android:layout_alignParentRight="true" >
+       android:layout_alignParentRight="true"
+       android:layout_marginTop="100dp" >
 
        <TextView
            android:id="@+id/accountTextView"
@@ -27,6 +35,7 @@
            android:layout_height="wrap_content"
            android:layout_alignParentTop="true"
            android:layout_marginTop="109dp"
+           android:text="1234567891"
            android:layout_toRightOf="@+id/accountTextView"
            android:ems="10" />
    </RelativeLayout>
@@ -68,41 +77,14 @@
        android:layout_marginTop="47dp"
        android:text="Login" />
 
-   <Button
-       android:id="@+id/jPostButton"
-       style="?android:attr/buttonStyleSmall"
+   <TextView
+       android:id="@+id/textView1"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
-       android:layout_alignTop="@+id/jGetButton"
-       android:layout_toRightOf="@+id/jGetButton"
-       android:text="javaPost" />
-
-   <Button
-       android:id="@+id/aGetButton"
-       style="?android:attr/buttonStyleSmall"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:layout_alignTop="@+id/jPostButton"
-       android:layout_toRightOf="@+id/jPostButton"
-       android:text="apacheGet" />
-
-   <Button
-       android:id="@+id/aPostButton"
-       style="?android:attr/buttonStyleSmall"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:layout_alignTop="@+id/aGetButton"
-       android:layout_toRightOf="@+id/aGetButton"
-       android:text="apachePost" />
-
-   <Button
-       android:id="@+id/jGetButton"
-       style="?android:attr/buttonStyleSmall"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
+       android:layout_alignBottom="@+id/serverIpEditTextId"
        android:layout_alignParentLeft="true"
-       android:layout_below="@+id/loginButton"
-       android:layout_marginTop="40dp"
-       android:text="javaGet" />
+       android:layout_alignParentTop="true"
+       android:layout_toLeftOf="@+id/serverIpEditTextId"
+       android:text="ServerIp:" />
    
 </RelativeLayout>
