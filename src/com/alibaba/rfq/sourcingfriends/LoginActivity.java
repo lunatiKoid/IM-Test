@@ -32,7 +32,7 @@ public class LoginActivity extends Activity {
 	private EditText accountEditText;
 	private EditText passwdEditText;
 	private Properties props;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -47,42 +47,46 @@ public class LoginActivity extends Activity {
 		loginButton = (Button) findViewById(R.id.loginButton);
 		accountEditText = (EditText) findViewById(R.id.accountEditText);
 		passwdEditText = (EditText) findViewById(R.id.passwdEditText);
-		
+
 		// connect to the server
-		// connect to server
-        serverIpEditText = (EditText) findViewById(R.id.serverIpEditTextId );
-        
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-   
-            	props = new Properties();
-            	props.setProperty( "xmppHost", serverIpEditText.getText().toString() );
-            	props.setProperty( "apiKey", accountEditText.getText().toString());
-            	props.setProperty("xmppPort", "5222");
-            	
-            	class myThread extends Thread{
-            		public myThread(){
-            			Log.i("LoginActivity","create a Thread");
-            		}
-            		public void run(){
-            	// connect to server
-                ServiceManager serviceManager = new ServiceManager(gContext,props);
-                serviceManager.setNotificationIcon(R.drawable.notification);
-                serviceManager.startService();
-            	}
-            	};
-            	
-            	myThread aThread = new myThread();
-            	aThread.run();
-            	Log.i("LoginActivity","It's Here");
-                //Intent intent = new Intent();
-				//intent.setClass(LoginActivity.this,
-				//		ManagerCenterActivity.class);
-				//startActivity(intent);
-                
-            }
-        });
-		
+		serverIpEditText = (EditText) findViewById(R.id.serverIpEditTextId);
+
+		loginButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
+
+				props = new Properties();
+				props.setProperty("xmppHost", serverIpEditText.getText()
+						.toString());
+				props.setProperty("apiKey", accountEditText.getText()
+						.toString());
+				props.setProperty("xmppPort", "5222");
+
+				class myThread extends Thread {
+					public myThread() {
+						Log.i("LoginActivity", "create a Thread");
+					}
+
+					public void run() {
+						// connect to server
+						ServiceManager serviceManager = new ServiceManager(
+								gContext, props);
+						serviceManager
+								.setNotificationIcon(R.drawable.notification);
+						serviceManager.startService();
+					}
+				};
+
+				myThread aThread = new myThread();
+				aThread.run();
+				Log.i("LoginActivity", "It's Here");
+				// Intent intent = new Intent();
+				// intent.setClass(LoginActivity.this,
+				// ManagerCenterActivity.class);
+				// startActivity(intent);
+
+			}
+		});
+
 		// ended
 
 	}
