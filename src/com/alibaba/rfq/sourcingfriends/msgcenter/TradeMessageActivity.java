@@ -24,9 +24,6 @@ public class TradeMessageActivity extends Activity {
 
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.trade_message);
-
-		
-		// 
 		
 		listData = getData();
 		tradeMsgListView = (ListView) findViewById(R.id.TradeMsgListViewId );

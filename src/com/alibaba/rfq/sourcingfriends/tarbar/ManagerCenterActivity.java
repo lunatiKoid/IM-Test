@@ -9,6 +9,7 @@ import com.alibaba.rfq.sourcingfriends.R.id;
 import com.alibaba.rfq.sourcingfriends.R.layout;
 import com.alibaba.rfq.sourcingfriends.contactlist.ContactListActivity;
 import com.alibaba.rfq.sourcingfriends.msgcenter.TradeMessageActivity;
+import com.alibaba.rfq.sourcingfriends.xmpp.impl.XmppConnectionImpl;
 
 import android.app.ActivityGroup;
 import android.content.BroadcastReceiver;
@@ -33,7 +34,8 @@ public class ManagerCenterActivity extends ActivityGroup implements OnCheckedCha
 	private List<TabBarButton> buttonList;
 	
 	private RadioGroup.LayoutParams buttonLayoutParams;
-	   
+	  
+	private String account ;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -41,6 +43,7 @@ public class ManagerCenterActivity extends ActivityGroup implements OnCheckedCha
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.tabbar);
 		
+		account = getIntent().getStringExtra("USERID");
 		
 		// 
 		contentViewLayout = (LinearLayout) findViewById(R.id.contentViewLayout);
@@ -48,6 +51,7 @@ public class ManagerCenterActivity extends ActivityGroup implements OnCheckedCha
 		tabBar.setOnCheckedChangeListener(this);
 		
 		buttonList = new ArrayList<TabBarButton>();
+
 		
 		addTabButton(R.string.message_center, R.drawable.tabbar_msg, new Intent(this, TradeMessageActivity.class));	
 		addTabButton(R.string.contact_list, R.drawable.tabbar_contact, new Intent(this,ContactListActivity.class));
@@ -58,6 +62,7 @@ public class ManagerCenterActivity extends ActivityGroup implements OnCheckedCha
 	
 	public void addTabButton(int label, int imageId, Intent intent) {
 		TabBarButton btn = new TabBarButton(this);
+		intent.putExtra("USERID", account);
 		btn.setState(imageId, label, intent);
 		buttonList.add(btn);
 	}

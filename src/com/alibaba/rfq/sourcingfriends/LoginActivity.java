@@ -3,6 +3,8 @@ package com.alibaba.rfq.sourcingfriends;
 import java.util.Collection;
 import java.util.Properties;
 import com.alibaba.rfq.sourcingfriends.tarbar.ManagerCenterActivity;
+import com.alibaba.rfq.sourcingfriends.xmpp.impl.XmppConnectionImpl;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -14,29 +16,24 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.jivesoftware.smack.Chat;
-import org.jivesoftware.smack.ChatManager;
-import org.jivesoftware.smack.ChatManagerListener;
-import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.MessageListener;
-import org.jivesoftware.smack.Roster;
-import org.jivesoftware.smack.RosterEntry;
-import org.jivesoftware.smack.RosterGroup;
-import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.packet.Message;
-
+import org.jivesoftware.smack.packet.Presence;
 
 public class LoginActivity extends Activity {
 
+	public static LoginActivity loginAct;
+	
 	private Context gContext;
+
+	private static int LOGIN_SUCCESS = 1;
+	private static int LOGIN_ERROR = 2;
 
 	// server string
 	private EditText serverIpEditText;
 	private String serverIp;
 	private String account;
 	private String passwd;
-	
+
 	// login view
 	private Button loginButton;
 	private EditText accountEditText;
@@ -46,11 +43,11 @@ public class LoginActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		
 		// Set up the window layout
 		// requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.user_login);
-
+		loginAct = this;
 		//
 		gContext = this;
 
@@ -64,13 +61,79 @@ public class LoginActivity extends Activity {
 		loginButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 
+				serverIp = serverIpEditText.getText().toString();
+				account = accountEditText.getText().toString();
+				passwd = passwdEditText.getText().toString();
+
 				Log.i("LoginActivity", "It's Here");
-				// Intent intent = new Intent();
-				// intent.setClass(LoginActivity.this,
-				// ManagerCenterActivity.class);
-				// startActivity(intent);
+				if (!account.isEmpty() && !passwd.isEmpty()) {
+					new Thread(new Runnable() {
+						public void run() {
+
+							try {
+								// Á¬½Ó
+								XmppConnectionImpl.setServerIp(serverIp);
+								XmppConnectionImpl.getConnection().login(
+										account, passwd);
+
+								// ×´Ì¬
+								Presence presence = new Presence(
+										Presence.Type.available);
+								XmppConnectionImpl.getConnection().sendPacket(
+										presence);
+
+								Intent intent = new Intent();
+								intent.setClass(LoginActivity.this,
+										ManagerCenterActivity.class);
+								intent.putExtra("USERID", account);
+								LoginActivity.this.startActivity(intent);
+								LoginActivity.this.finish();
+								loginHandler.sendEmptyMessage(LOGIN_SUCCESS);
+							} catch (XMPPException e) {
+								XmppConnectionImpl.closeConnection();
+								loginHandler.sendEmptyMessage(LOGIN_ERROR);
+							}
+						}
+					}).start();
+				}
 			}
 		});
+	}
 
+	private Handler loginHandler = new Handler() {
+		public void handleMessage(android.os.Message msg) {
+
+			if (msg.what == LOGIN_SUCCESS ) {
+				Toast.makeText(gContext, "µÇÂ¼...£¡", Toast.LENGTH_SHORT).show();
+			} else if (msg.what == LOGIN_ERROR) {
+
+				Toast.makeText(gContext, "µÇÂ¼Ê§°Ü£¡", Toast.LENGTH_SHORT).show();
+			}
+		};
+	};
+
+
+	public String getServerIp() {
+		return serverIp;
+	}
+
+	public void setServerIp(String serverIp) {
+		this.serverIp = serverIp;
+	}
+
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
+	}
+
+	public String getPasswd() {
+		return passwd;
+	}
+
+	public void setPasswd(String passwd) {
+		this.passwd = passwd;
 	}
 }
