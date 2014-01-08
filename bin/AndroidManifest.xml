@@ -33,21 +33,11 @@
         <activity android:name="com.alibaba.rfq.sourcingfriends.msgcenter.TradeMessageActivity" ></activity>
         <activity android:name="com.alibaba.rfq.sourcingfriends.contactlist.ContactListActivity"></activity>
         <activity android:name=".tarbar.ManagerCenterActivity"></activity>
-        <activity android:name=".service.DeviceListActivity"></activity>
-
         <activity 
             android:name=".msgcenter.IngMessageActivity" 
             android:windowSoftInputMode="adjustResize">
         </activity>        
-         
         <activity android:name=".contactlist.UserDetailActivity"></activity>
-        <service android:enabled="true" android:name="org.androidpn.client.NotificationService" android:label="NotificationService">
-            <intent-filter>
-				<action android:name="org.androidpn.client.NotificationService" />
-			</intent-filter>
-        </service>
-        <activity android:name="org.androidpn.client.NotificationDetailsActivity"></activity>
-        <activity android:name="org.androidpn.client.NotificationSettingsActivity"></activity>
     </application>
 
 </manifest>

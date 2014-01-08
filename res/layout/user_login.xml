@@ -35,7 +35,7 @@
            android:layout_height="wrap_content"
            android:layout_alignParentTop="true"
            android:layout_marginTop="109dp"
-           android:text="1234567891"
+           android:text="asdf@sf.alibaba.com"
            android:layout_toRightOf="@+id/accountTextView"
            android:ems="10" />
    </RelativeLayout>
@@ -64,6 +64,7 @@
            android:layout_height="wrap_content"
            android:layout_alignParentTop="true"
            android:layout_toRightOf="@+id/passwdTextView"
+           android:text="asdf"
            android:ems="10" />
    </RelativeLayout>
 

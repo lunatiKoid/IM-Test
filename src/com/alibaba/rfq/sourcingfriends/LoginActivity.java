@@ -1,33 +1,43 @@
 package com.alibaba.rfq.sourcingfriends;
 
+import java.util.Collection;
 import java.util.Properties;
-
-import org.androidpn.client.ServiceManager;
 import com.alibaba.rfq.sourcingfriends.tarbar.ManagerCenterActivity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-/**
- * 这里，LoginActivity需要做的只是一个假连接，或者来说，真正的需要连接的时候，
- * 完全可以通过在IngMessageActivity调用时，真正的连接，只需要把相关连接需要的参数传递过去就ok了
- * 
- * */
+import org.jivesoftware.smack.Chat;
+import org.jivesoftware.smack.ChatManager;
+import org.jivesoftware.smack.ChatManagerListener;
+import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.MessageListener;
+import org.jivesoftware.smack.Roster;
+import org.jivesoftware.smack.RosterEntry;
+import org.jivesoftware.smack.RosterGroup;
+import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.packet.Message;
+
 
 public class LoginActivity extends Activity {
 
 	private Context gContext;
 
-	// server
+	// server string
 	private EditText serverIpEditText;
-
-	// login
+	private String serverIp;
+	private String account;
+	private String passwd;
+	
+	// login view
 	private Button loginButton;
 	private EditText accountEditText;
 	private EditText passwdEditText;
@@ -48,46 +58,19 @@ public class LoginActivity extends Activity {
 		accountEditText = (EditText) findViewById(R.id.accountEditText);
 		passwdEditText = (EditText) findViewById(R.id.passwdEditText);
 
-		// connect to the server
+		// get serverIp
 		serverIpEditText = (EditText) findViewById(R.id.serverIpEditTextId);
 
 		loginButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 
-				props = new Properties();
-				props.setProperty("xmppHost", serverIpEditText.getText()
-						.toString());
-				props.setProperty("apiKey", accountEditText.getText()
-						.toString());
-				props.setProperty("xmppPort", "5222");
-
-				class myThread extends Thread {
-					public myThread() {
-						Log.i("LoginActivity", "create a Thread");
-					}
-
-					public void run() {
-						// connect to server
-						ServiceManager serviceManager = new ServiceManager(
-								gContext, props);
-						serviceManager
-								.setNotificationIcon(R.drawable.notification);
-						serviceManager.startService();
-					}
-				};
-
-				myThread aThread = new myThread();
-				aThread.run();
 				Log.i("LoginActivity", "It's Here");
 				// Intent intent = new Intent();
 				// intent.setClass(LoginActivity.this,
 				// ManagerCenterActivity.class);
 				// startActivity(intent);
-
 			}
 		});
-
-		// ended
 
 	}
 }
