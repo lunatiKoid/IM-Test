@@ -61,343 +61,330 @@ import android.widget.Toast;
 
 public class IngMessageActivity extends Activity {
 
-	public class Msg {
-		String userid;
-		String msg;
-		String date;
-		String from;
+    public class Msg {
 
-		public Msg(String userid, String msg, String date, String from) {
-			this.userid = userid;
-			this.msg = msg;
-			this.date = date;
-			this.from = from;
-		}
-	}
+        String userid;
+        String msg;
+        String date;
+        String from;
 
-	private List<Msg> listMsg = new ArrayList<Msg>();
+        public Msg(String userid, String msg, String date, String from) {
+            this.userid = userid;
+            this.msg = msg;
+            this.date = date;
+            this.from = from;
+        }
+    }
 
-	private static final String SERVER_DOMAIN = "sf.alibaba.com";
-	// Debugging
-	private static final String TAG = "IngMsg";
-	private static final boolean D = true;
+    private List<Msg>            listMsg       = new ArrayList<Msg>();
 
-	private TextView user2TalkTextView;
-	private ListView mConversationView;
-	private EditText mOutEditText;
-	private Button mSendButton;
+    private static final String  SERVER_DOMAIN = "sf.alibaba.com";
+    // Debugging
+    private static final String  TAG           = "IngMsg";
+    private static final boolean D             = true;
 
-	private String userIdStr = "";
-	private String user2SendId ="liang@sf.alibaba.com";
-	private static Chat user2Chat;
-	// Array adapter for the conversation thread
-	private IngMessageAdapter mConversationIngMsgAdapter;
+    private TextView             user2TalkTextView;
+    private ListView             mConversationView;
+    private EditText             mOutEditText;
+    private Button               mSendButton;
 
-	private DatabaseService service = null;
-	private UserProfileDTO she = null;
-	private UserProfileDTO me = null;
+    private String               userIdStr     = "";
+    private String               user2SendId   = "liang@sf.alibaba.com";
+    private static Chat          user2Chat;
+    // Array adapter for the conversation thread
+    private IngMessageAdapter    mConversationIngMsgAdapter;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    private DatabaseService      service       = null;
+    private UserProfileDTO       she           = null;
+    private UserProfileDTO       me            = null;
 
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.ing_message);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		// tem for add person to sqlite
-		Bitmap photo = BitmapFactory.decodeResource(this.getResources(),
-				R.drawable.yliang);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.ing_message);
 
-		UserProfileDTO user = new UserProfileDTO("yliang", "1111",
-				"alibaba-inc", photo);
+        // tem for add person to sqlite
+        Bitmap photo = BitmapFactory.decodeResource(this.getResources(), R.drawable.yliang);
 
-		service = new DatabaseService(this);
-		if (null == service.findByNamePasswd(user.getUserName(),
-				user.getPasswd()))
-			service.insertUserDO(user);
-		she = service.findByNamePasswd("yliang", "1111");
-		me = service.findByNamePasswd("yliang", "1111");
-		Log.i(TAG, "" + she.getUserName() + " " + me.getId());
-		// end
+        UserProfileDTO user = new UserProfileDTO("yliang", "1111", "alibaba-inc", photo);
 
-		Log.i("IngMessageActivity", LoginActivity.loginAct.getAccount());
+        service = new DatabaseService(this);
+        if (null == service.findByNamePasswd(user.getUserName(), user.getPasswd())) service.insertUserDO(user);
+        she = service.findByNamePasswd("yliang", "1111");
+        me = service.findByNamePasswd("yliang", "1111");
+        Log.i(TAG, "" + she.getUserName() + " " + me.getId());
+        // end
 
-		Intent intent = getIntent();
-		userIdStr = intent.getStringExtra("UserId");
+        Log.i("IngMessageActivity", LoginActivity.loginAct.getAccount());
 
-		MsgIng();
+        Intent intent = getIntent();
+        userIdStr = intent.getStringExtra("UserId");
 
-		ChatManager cm = XmppConnectionImpl.getConnection().getChatManager();
-		// 发送消息给water-pc服务器water（获取自己的服务器，和好友）
-		user2Chat = cm.createChat( user2SendId , null);
-		
-		cm.addChatListener(new ChatManagerListener() {
-			@Override
-			public void chatCreated(Chat chat, boolean able) {
-				chat.addMessageListener(new MessageListener() {
-					@Override
-					public void processMessage(Chat chat2, Message message) {
-						Log.v("--tags--", "--tags-form--" + message.getFrom());
-						Log.v("--tags--",
-								"--tags-message--" + message.getBody());
+        MsgIng();
 
-						// 收到来自 服务器 的消息
-						if (message.getFrom().equalsIgnoreCase(SERVER_DOMAIN)) {
-							// 获取用户、消息、时间、IN
-							String[] args = new String[] { message.getFrom(),
-									message.getBody(), TimeRender.getDate(),
-									"IN" };
+        ChatManager cm = XmppConnectionImpl.getConnection().getChatManager();
+        // 发送消息给water-pc服务器water（获取自己的服务器，和好友）
+        user2Chat = cm.createChat(user2SendId, null);
 
-							// 在handler里取出来显示消息
-							android.os.Message msg = handler.obtainMessage();
-							msg.what = 1;
-							msg.obj = args;
-							msg.sendToTarget();
+        cm.addChatListener(new ChatManagerListener() {
 
-						} else {
-							// message.getFrom().cantatins(获取列表上的用户，组，管理消息);
-							// 获取用户、消息、时间、IN
-							String[] args = new String[] { message.getFrom(),
-									message.getBody(), TimeRender.getDate(),
-									"IN" };
+            @Override
+            public void chatCreated(Chat chat, boolean able) {
+                chat.addMessageListener(new MessageListener() {
 
-							// 在handler里取出来显示消息
-							android.os.Message msg = handler.obtainMessage();
-							msg.what = 1;
-							msg.obj = args;
-							msg.sendToTarget();
+                    @Override
+                    public void processMessage(Chat chat2, Message message) {
+                        Log.v("--tags--", "--tags-form--" + message.getFrom());
+                        Log.v("--tags--", "--tags-message--" + message.getBody());
 
-						}
-						Log.i("FormClient", message.getFrom() + "-> msg:"
-								+ message.getBody() + " date:"
-								+ TimeRender.getDate().toString());
-					}
-				});
-			}
-		});
+                        // 收到来自 服务器 的消息
+                        if (message.getFrom().equalsIgnoreCase(SERVER_DOMAIN)) {
+                            // 获取用户、消息、时间、IN
+                            String[] args = new String[] { message.getFrom(), message.getBody(), TimeRender.getDate(),
+                                    "IN" };
 
-	}
+                            // 在handler里取出来显示消息
+                            android.os.Message msg = handler.obtainMessage();
+                            msg.what = 1;
+                            msg.obj = args;
+                            msg.sendToTarget();
 
-	private Handler handler = new Handler() {
-		public void handleMessage(android.os.Message msg) {
+                        } else {
+                            // message.getFrom().cantatins(获取列表上的用户，组，管理消息);
+                            // 获取用户、消息、时间、IN
+                            String[] args = new String[] { message.getFrom(), message.getBody(), TimeRender.getDate(),
+                                    "IN" };
 
-			switch (msg.what) {
-			case 1:
-				// 获取消息并显示
-				String[] args = (String[]) msg.obj;
-				listMsg.add(new Msg(args[0], args[1], args[2], args[3]));
-				// 刷新适配器
-				mConversationIngMsgAdapter.notifyDataSetChanged();
-				break;
-			default:
-				break;
-			}
-		};
-	};
+                            // 在handler里取出来显示消息
+                            android.os.Message msg = handler.obtainMessage();
+                            msg.what = 1;
+                            msg.obj = args;
+                            msg.sendToTarget();
 
-	class IngMessageAdapter extends BaseAdapter {
+                        }
+                        Log.i("FormClient", message.getFrom() + "-> msg:" + message.getBody() + " date:"
+                                            + TimeRender.getDate().toString());
+                    }
+                });
+            }
+        });
 
-		private Context context;
+    }
 
-		private UserProfileDTO useri;
-		private UserProfileDTO myself;
+    private Handler handler = new Handler() {
 
-		public IngMessageAdapter(Context context, UserProfileDTO she,
-				UserProfileDTO me) {
-			this.context = context;
-			this.useri = she;
-			this.myself = me;
-		}
+                                public void handleMessage(android.os.Message msg) {
 
-		@Override
-		public int getCount() {
-			// TODO Auto-generated method stub
-			return listMsg.size();
-		}
+                                    switch (msg.what) {
+                                        case 1:
+                                            // 获取消息并显示
+                                            String[] args = (String[]) msg.obj;
+                                            listMsg.add(new Msg(args[0], args[1], args[2], args[3]));
+                                            // 刷新适配器
+                                            mConversationIngMsgAdapter.notifyDataSetChanged();
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                };
+                            };
 
-		@Override
-		public Object getItem(int position) {
-			// TODO Auto-generated method stub
-			return listMsg.get(position);
-		}
+    class IngMessageAdapter extends BaseAdapter {
 
-		@Override
-		public long getItemId(int position) {
-			// TODO Auto-generated method stub
-			return position;
-		}
+        private Context        context;
 
-		public class ViewHolder {
-			ImageView userImageView;
-			TextView theiMessage;
-			ImageView myImageView;
-		}
+        private UserProfileDTO useri;
+        private UserProfileDTO myself;
 
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			// TODO Auto-generated method stub
+        public IngMessageAdapter(Context context, UserProfileDTO she, UserProfileDTO me) {
+            this.context = context;
+            this.useri = she;
+            this.myself = me;
+        }
 
-			ViewHolder viewHolder = null;
+        @Override
+        public int getCount() {
+            // TODO Auto-generated method stub
+            return listMsg.size();
+        }
 
-			if (convertView == null) {
-				convertView = LayoutInflater.from(context).inflate(
-						R.layout.msging_list_view_item, null);
-				viewHolder = new ViewHolder();
+        @Override
+        public Object getItem(int position) {
+            // TODO Auto-generated method stub
+            return listMsg.get(position);
+        }
 
-				viewHolder.userImageView = (ImageView) convertView
-						.findViewById(R.id.UserImageView);
+        @Override
+        public long getItemId(int position) {
+            // TODO Auto-generated method stub
+            return position;
+        }
 
-				viewHolder.theiMessage = (TextView) convertView
-						.findViewById(R.id.TheiMsgTextView);
+        public class ViewHolder {
 
-				viewHolder.myImageView = (ImageView) convertView
-						.findViewById(R.id.MyImageView);
+            ImageView userImageView;
+            TextView  theiMessage;
+            ImageView myImageView;
+        }
 
-				convertView.setTag(viewHolder);
-			} else {
-				viewHolder = (ViewHolder) convertView.getTag();
-			}
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            // TODO Auto-generated method stub
 
-			String msg = listMsg.get(position).msg;
-			viewHolder.theiMessage.setText(msg);
+            ViewHolder viewHolder = null;
 
-			if (listMsg.get(position).from.equalsIgnoreCase("in")) {
-				viewHolder.userImageView.setImageBitmap(useri.getPhoto());
-				viewHolder.userImageView
-						.setOnClickListener(new OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								// TODO Auto-generated method stub
-								Intent intent = new Intent();
-								intent.putExtra("UserId", "" + useri.getId());
-								intent.setClass(context,
-										UserDetailActivity.class);
-								context.startActivity(intent);
-							}
-						});
-				viewHolder.theiMessage.setGravity(Gravity.LEFT);
-				viewHolder.userImageView.setVisibility(View.VISIBLE);
-				viewHolder.myImageView.setVisibility(View.INVISIBLE);
-			} else {
-				viewHolder.myImageView.setImageBitmap(myself.getPhoto());
-				viewHolder.myImageView
-						.setOnClickListener(new OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								// TODO Auto-generated method stub
-								Intent intent = new Intent();
-								intent.putExtra("UserId", "" + myself.getId());
-								intent.setClass(context,
-										UserDetailActivity.class);
-								context.startActivity(intent);
-							}
-						});
-				viewHolder.theiMessage.setGravity(Gravity.RIGHT);
-				viewHolder.userImageView.setVisibility(View.INVISIBLE);
-				viewHolder.myImageView.setVisibility(View.VISIBLE);
-			}
+            if (convertView == null) {
+                convertView = LayoutInflater.from(context).inflate(R.layout.msging_list_view_item, null);
+                viewHolder = new ViewHolder();
 
-			// convertView.setOnClickListener( new OnClickListener(){
-			//
-			// public void onClick(View v) {
-			// Toast.makeText(context,"click",Toast.LENGTH_SHORT).show();
-			// }
-			// });
-			//
-			//
-			// convertView.setOnLongClickListener(new OnLongClickListener(){
-			// public boolean onLongClick(View v) {
-			// Toast.makeText(context,"long click",Toast.LENGTH_SHORT).show();
-			// return true;
-			// }
-			// });
+                viewHolder.userImageView = (ImageView) convertView.findViewById(R.id.UserImageView);
 
-			return convertView;
-		}
+                viewHolder.theiMessage = (TextView) convertView.findViewById(R.id.TheiMsgTextView);
 
-	}
+                viewHolder.myImageView = (ImageView) convertView.findViewById(R.id.MyImageView);
 
-	private void MsgIng() {
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
 
-		user2TalkTextView = (TextView) findViewById(R.id.User2TalkTextView);
-		user2TalkTextView.setText("user:" + userIdStr);
+            String msg = listMsg.get(position).msg;
+            viewHolder.theiMessage.setText(msg);
 
-		// Initialize the array adapter for the conversation thread
-		mConversationIngMsgAdapter = new IngMessageAdapter(this, she, me);
-		mConversationView = (ListView) findViewById(R.id.IngMsgListViewId);
-		mConversationView.setAdapter(mConversationIngMsgAdapter);
+            if (listMsg.get(position).from.equalsIgnoreCase("in")) {
+                viewHolder.userImageView.setImageBitmap(useri.getPhoto());
+                viewHolder.userImageView.setOnClickListener(new OnClickListener() {
 
-		// Initialize the compose field with a listener for the return key
-		mOutEditText = (EditText) findViewById(R.id.Text4SendEditText);
-		// mOutEditText.setOnEditorActionListener(mWriteListener);
+                    @Override
+                    public void onClick(View v) {
+                        // TODO Auto-generated method stub
+                        Intent intent = new Intent();
+                        intent.putExtra("UserId", "" + useri.getId());
+                        intent.setClass(context, UserDetailActivity.class);
+                        context.startActivity(intent);
+                    }
+                });
+                viewHolder.theiMessage.setGravity(Gravity.LEFT);
+                viewHolder.userImageView.setVisibility(View.VISIBLE);
+                viewHolder.myImageView.setVisibility(View.INVISIBLE);
+            } else {
+                viewHolder.myImageView.setImageBitmap(myself.getPhoto());
+                viewHolder.myImageView.setOnClickListener(new OnClickListener() {
 
-		// Initialize the send button with a listener that for click events
-		mSendButton = (Button) findViewById(R.id.button_send);
-		mSendButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				// Send a message using content of the edit text widget
-				String msg = mOutEditText.getText().toString();
+                    @Override
+                    public void onClick(View v) {
+                        // TODO Auto-generated method stub
+                        Intent intent = new Intent();
+                        intent.putExtra("UserId", "" + myself.getId());
+                        intent.setClass(context, UserDetailActivity.class);
+                        context.startActivity(intent);
+                    }
+                });
+                viewHolder.theiMessage.setGravity(Gravity.RIGHT);
+                viewHolder.userImageView.setVisibility(View.INVISIBLE);
+                viewHolder.myImageView.setVisibility(View.VISIBLE);
+            }
 
-				if (msg.length() > 0) {
-					// 发送消息
-					listMsg.add(new Msg( "", msg, TimeRender.getDate(),
-							"OUT"));
-					// 刷新适配器
-					mConversationIngMsgAdapter.notifyDataSetChanged();
+            // convertView.setOnClickListener( new OnClickListener(){
+            //
+            // public void onClick(View v) {
+            // Toast.makeText(context,"click",Toast.LENGTH_SHORT).show();
+            // }
+            // });
+            //
+            //
+            // convertView.setOnLongClickListener(new OnLongClickListener(){
+            // public boolean onLongClick(View v) {
+            // Toast.makeText(context,"long click",Toast.LENGTH_SHORT).show();
+            // return true;
+            // }
+            // });
 
-					try {
-						// 发送消息给 user2SendId [liang] 
-						user2Chat.sendMessage(msg);
+            return convertView;
+        }
 
-					} catch (XMPPException e) {
-						e.printStackTrace();
-					}
-				} else {
-					Toast.makeText(IngMessageActivity.this, "请输入信息", Toast.LENGTH_SHORT)
-							.show();
-				}
-				// 清空text
-				mOutEditText.setText("");
-				// sendMessage;
-			}
-		});
+    }
 
-	}
+    private void MsgIng() {
 
-	@Override
-	public void onStart() {
-		super.onStart();
-	}
+        user2TalkTextView = (TextView) findViewById(R.id.User2TalkTextView);
+        user2TalkTextView.setText("user:" + userIdStr);
 
-	@Override
-	public synchronized void onResume() {
-		super.onResume();
-	}
+        // Initialize the array adapter for the conversation thread
+        mConversationIngMsgAdapter = new IngMessageAdapter(this, she, me);
+        mConversationView = (ListView) findViewById(R.id.IngMsgListViewId);
+        mConversationView.setAdapter(mConversationIngMsgAdapter);
 
-	@Override
-	public synchronized void onPause() {
-		super.onPause();
-		if (D)
-			Log.e(TAG, "- ON PAUSE -");
-	}
+        // Initialize the compose field with a listener for the return key
+        mOutEditText = (EditText) findViewById(R.id.Text4SendEditText);
+        // mOutEditText.setOnEditorActionListener(mWriteListener);
 
-	@Override
-	public void onStop() {
-		super.onStop();
-		if (D)
-			Log.e(TAG, "-- ON STOP --");
-	}
+        // Initialize the send button with a listener that for click events
+        mSendButton = (Button) findViewById(R.id.button_send);
+        mSendButton.setOnClickListener(new OnClickListener() {
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-	}
+            public void onClick(View v) {
+                // Send a message using content of the edit text widget
+                String msg = mOutEditText.getText().toString();
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.option_menu, menu);
-		return true;
-	}
+                if (msg.length() > 0) {
+                    // 发送消息
+                    listMsg.add(new Msg("", msg, TimeRender.getDate(), "OUT"));
+                    // 刷新适配器
+                    mConversationIngMsgAdapter.notifyDataSetChanged();
+
+                    try {
+                        // 发送消息给 user2SendId [liang]
+                        user2Chat.sendMessage(msg);
+
+                    } catch (XMPPException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Toast.makeText(IngMessageActivity.this, "请输入信息", Toast.LENGTH_SHORT).show();
+                }
+                // 清空text
+                mOutEditText.setText("");
+                // sendMessage;
+            }
+        });
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public synchronized void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public synchronized void onPause() {
+        super.onPause();
+        if (D) Log.e(TAG, "- ON PAUSE -");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (D) Log.e(TAG, "-- ON STOP --");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.option_menu, menu);
+        return true;
+    }
 
 }
