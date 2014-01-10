@@ -2,37 +2,23 @@ package com.alibaba.rfq.sourcingfriends.msgcenter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManager;
 import org.jivesoftware.smack.ChatManagerListener;
 import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
-import org.jivesoftware.smackx.filetransfer.FileTransfer;
-import org.jivesoftware.smackx.filetransfer.FileTransfer.Status;
-import org.jivesoftware.smackx.filetransfer.FileTransferListener;
-import org.jivesoftware.smackx.filetransfer.FileTransferManager;
-import org.jivesoftware.smackx.filetransfer.FileTransferRequest;
-import org.jivesoftware.smackx.filetransfer.IncomingFileTransfer;
-import org.jivesoftware.smackx.filetransfer.OutgoingFileTransfer;
-
 import com.alibaba.rfq.sourcingfriends.LoginActivity;
 import com.alibaba.rfq.sourcingfriends.R;
 import com.alibaba.rfq.sourcingfriends.contactlist.UserDetailActivity;
 import com.alibaba.rfq.sourcingfriends.db.DatabaseService;
 import com.alibaba.rfq.sourcingfriends.dto.UserProfileDTO;
+import com.alibaba.rfq.sourcingfriends.msgcenter.TradeMessageActivity.TradeMsg;
 import com.alibaba.rfq.sourcingfriends.xmpp.impl.TimeRender;
 import com.alibaba.rfq.sourcingfriends.xmpp.impl.XmppConnectionImpl;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -40,17 +26,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -61,42 +43,29 @@ import android.widget.Toast;
 
 public class IngMessageActivity extends Activity {
 
-    public class Msg {
-
-        String userid;
-        String msg;
-        String date;
-        String from;
-
-        public Msg(String userid, String msg, String date, String from) {
-            this.userid = userid;
-            this.msg = msg;
-            this.date = date;
-            this.from = from;
-        }
-    }
-
-    private List<Msg>            listMsg       = new ArrayList<Msg>();
-
-    private static final String  SERVER_DOMAIN = "sf.alibaba.com";
+    private static final String  SERVER_DOMAIN   = "sf.alibaba.com";
+    private static final int     ING_MSG_RECEIVE = 4;
     // Debugging
-    private static final String  TAG           = "IngMsg";
-    private static final boolean D             = true;
+    private static final String  TAG             = "IngMsg";
+    private static final boolean D               = true;
 
     private TextView             user2TalkTextView;
     private ListView             mConversationView;
     private EditText             mOutEditText;
     private Button               mSendButton;
 
-    private String               userIdStr     = "";
-    private String               user2SendId   = "liang@sf.alibaba.com";
+    private String               userIdStr       = "liang@sf.alibaba.com";
     private static Chat          user2Chat;
+    private ChatManagerListener  cmListener;
+    private ChatManager          cm;
     // Array adapter for the conversation thread
     private IngMessageAdapter    mConversationIngMsgAdapter;
 
-    private DatabaseService      service       = null;
-    private UserProfileDTO       she           = null;
-    private UserProfileDTO       me            = null;
+    private DatabaseService      service         = null;
+    private UserProfileDTO       she             = null;
+    private UserProfileDTO       me              = null;
+
+    private List<Msg>            listMsg         = new ArrayList<Msg>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,14 +93,16 @@ public class IngMessageActivity extends Activity {
 
         MsgIng();
 
-        ChatManager cm = XmppConnectionImpl.getConnection().getChatManager();
-        // 发送消息给water-pc服务器water（获取自己的服务器，和好友）
-        user2Chat = cm.createChat(user2SendId, null);
+        // xmpp st
+        cm = XmppConnectionImpl.getConnection().getChatManager();
+        // 发送消息给user2SendId（获取上一个intent传过来的UserId）
+        user2Chat = cm.createChat(userIdStr, null);
 
-        cm.addChatListener(new ChatManagerListener() {
+        cmListener = new ChatManagerListener() {
 
             @Override
             public void chatCreated(Chat chat, boolean able) {
+
                 chat.addMessageListener(new MessageListener() {
 
                     @Override
@@ -147,10 +118,10 @@ public class IngMessageActivity extends Activity {
 
                             // 在handler里取出来显示消息
                             android.os.Message msg = handler.obtainMessage();
-                            msg.what = 1;
+                            msg.what = ING_MSG_RECEIVE;
                             msg.obj = args;
                             msg.sendToTarget();
-
+                            Log.i("IngMessageActivity-1", message.getFrom());
                         } else {
                             // message.getFrom().cantatins(获取列表上的用户，组，管理消息);
                             // 获取用户、消息、时间、IN
@@ -159,17 +130,18 @@ public class IngMessageActivity extends Activity {
 
                             // 在handler里取出来显示消息
                             android.os.Message msg = handler.obtainMessage();
-                            msg.what = 1;
+                            msg.what = ING_MSG_RECEIVE;
                             msg.obj = args;
                             msg.sendToTarget();
-
+                            Log.i("IngMessageActivity-2", message.getFrom());
                         }
-                        Log.i("FormClient", message.getFrom() + "-> msg:" + message.getBody() + " date:"
-                                            + TimeRender.getDate().toString());
+                        Log.i("IngMessageActivity", message.getFrom() + "-> msg:" + message.getBody() + " date:"
+                                                    + TimeRender.getDate().toString());
                     }
                 });
             }
-        });
+        };
+        cm.addChatListener(cmListener);
 
     }
 
@@ -178,10 +150,10 @@ public class IngMessageActivity extends Activity {
                                 public void handleMessage(android.os.Message msg) {
 
                                     switch (msg.what) {
-                                        case 1:
+                                        case ING_MSG_RECEIVE:
                                             // 获取消息并显示
-                                            String[] args = (String[]) msg.obj;
-                                            listMsg.add(new Msg(args[0], args[1], args[2], args[3]));
+                                            Msg one = (Msg) msg.obj;
+                                            listMsg.add(one);
                                             // 刷新适配器
                                             mConversationIngMsgAdapter.notifyDataSetChanged();
                                             break;
@@ -254,6 +226,8 @@ public class IngMessageActivity extends Activity {
             viewHolder.theiMessage.setText(msg);
 
             if (listMsg.get(position).from.equalsIgnoreCase("in")) {
+                Log.i("IngMessageActivity+adapter", listMsg.get(position).msg);
+
                 viewHolder.userImageView.setImageBitmap(useri.getPhoto());
                 viewHolder.userImageView.setOnClickListener(new OnClickListener() {
 
@@ -286,21 +260,6 @@ public class IngMessageActivity extends Activity {
                 viewHolder.userImageView.setVisibility(View.INVISIBLE);
                 viewHolder.myImageView.setVisibility(View.VISIBLE);
             }
-
-            // convertView.setOnClickListener( new OnClickListener(){
-            //
-            // public void onClick(View v) {
-            // Toast.makeText(context,"click",Toast.LENGTH_SHORT).show();
-            // }
-            // });
-            //
-            //
-            // convertView.setOnLongClickListener(new OnLongClickListener(){
-            // public boolean onLongClick(View v) {
-            // Toast.makeText(context,"long click",Toast.LENGTH_SHORT).show();
-            // return true;
-            // }
-            // });
 
             return convertView;
         }
@@ -356,28 +315,31 @@ public class IngMessageActivity extends Activity {
     @Override
     public void onStart() {
         super.onStart();
+        Log.i("IngMessageActivity", "on Start");
     }
 
     @Override
     public synchronized void onResume() {
         super.onResume();
+        Log.i("IngMessageActivity", "on Resume");
     }
 
     @Override
     public synchronized void onPause() {
         super.onPause();
-        if (D) Log.e(TAG, "- ON PAUSE -");
+        Log.i("IngMessageActivity", "on Pause");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if (D) Log.e(TAG, "-- ON STOP --");
+        Log.i("IngMessageActivity", "on Stop");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.i("IngMessageActivity", "on Destroy");
     }
 
     @Override

@@ -21,119 +21,122 @@ import org.jivesoftware.smack.packet.Presence;
 
 public class LoginActivity extends Activity {
 
-	public static LoginActivity loginAct;
-	
-	private Context gContext;
+    public static LoginActivity loginAct;
 
-	private static int LOGIN_SUCCESS = 1;
-	private static int LOGIN_ERROR = 2;
+    private Context             gContext;
 
-	// server string
-	private EditText serverIpEditText;
-	private String serverIp;
-	private String account;
-	private String passwd;
+    private static int          LOGIN_SUCCESS = 1;
+    private static int          LOGIN_ERROR   = 2;
 
-	// login view
-	private Button loginButton;
-	private EditText accountEditText;
-	private EditText passwdEditText;
-	private Properties props;
+    // server string
+    private EditText            serverIpEditText;
+    private String              serverIp;
+    private String              account;
+    private String              passwd;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		
-		// Set up the window layout
-		// requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.user_login);
-		loginAct = this;
-		//
-		gContext = this;
+    // login view
+    private Button              loginButton;
+    private EditText            accountEditText;
+    private EditText            passwdEditText;
+    private Properties          props;
 
-		loginButton = (Button) findViewById(R.id.loginButton);
-		accountEditText = (EditText) findViewById(R.id.accountEditText);
-		passwdEditText = (EditText) findViewById(R.id.passwdEditText);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		// get serverIp
-		serverIpEditText = (EditText) findViewById(R.id.serverIpEditTextId);
+        // Set up the window layout
+        // requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.user_login);
+        loginAct = this;
+        //
+        gContext = this;
 
-		loginButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View view) {
+        loginButton = (Button) findViewById(R.id.loginButton);
+        accountEditText = (EditText) findViewById(R.id.accountEditText);
+        passwdEditText = (EditText) findViewById(R.id.passwdEditText);
 
-				serverIp = serverIpEditText.getText().toString();
-				account = accountEditText.getText().toString();
-				passwd = passwdEditText.getText().toString();
+        // get serverIp
+        serverIpEditText = (EditText) findViewById(R.id.serverIpEditTextId);
 
-				Log.i("LoginActivity", "It's Here");
-				if (!account.isEmpty() && !passwd.isEmpty()) {
-					new Thread(new Runnable() {
-						public void run() {
+        loginButton.setOnClickListener(new View.OnClickListener() {
 
-							try {
-								// Á¬½Ó
-								XmppConnectionImpl.setServerIp(serverIp);
-								XmppConnectionImpl.getConnection().login(
-										account, passwd);
+            public void onClick(View view) {
 
-								// ×´Ì¬
-								Presence presence = new Presence(
-										Presence.Type.available);
-								XmppConnectionImpl.getConnection().sendPacket(
-										presence);
+                serverIp = serverIpEditText.getText().toString();
+                account = accountEditText.getText().toString();
+                passwd = passwdEditText.getText().toString();
 
-								Intent intent = new Intent();
-								intent.setClass(LoginActivity.this,
-										ManagerCenterActivity.class);
-								intent.putExtra("USERID", account);
-								LoginActivity.this.startActivity(intent);
-								LoginActivity.this.finish();
-								loginHandler.sendEmptyMessage(LOGIN_SUCCESS);
-							} catch (XMPPException e) {
-								XmppConnectionImpl.closeConnection();
-								loginHandler.sendEmptyMessage(LOGIN_ERROR);
-							}
-						}
-					}).start();
-				}
-			}
-		});
-	}
+                Log.i("LoginActivity", "It's Here");
+                if (!account.isEmpty() && !passwd.isEmpty()) {
+                    new Thread(new Runnable() {
 
-	private Handler loginHandler = new Handler() {
-		public void handleMessage(android.os.Message msg) {
+                        public void run() {
 
-			if (msg.what == LOGIN_SUCCESS ) {
-				Toast.makeText(gContext, "µÇÂ¼...£¡", Toast.LENGTH_SHORT).show();
-			} else if (msg.what == LOGIN_ERROR) {
+                            try {
+                                // Á¬½Ó
+                                XmppConnectionImpl.setServerIp(serverIp);
+                                // XmppConnectionImpl.getConnection().login(account, passwd);
 
-				Toast.makeText(gContext, "µÇÂ¼Ê§°Ü£¡", Toast.LENGTH_SHORT).show();
-			}
-		};
-	};
+                                // get the offline msgs
+                                XmppConnectionImpl.getOfflineConnection().login(account, passwd);
 
+                                XmppConnectionImpl.ThenGetOffMsg(XmppConnectionImpl.getConnection());
 
-	public String getServerIp() {
-		return serverIp;
-	}
+                                // ×´Ì¬
+                                Presence presence = new Presence(Presence.Type.available);
+                                XmppConnectionImpl.getConnection().sendPacket(presence);
 
-	public void setServerIp(String serverIp) {
-		this.serverIp = serverIp;
-	}
+                                Intent intent = new Intent();
+                                intent.setClass(LoginActivity.this, ManagerCenterActivity.class);
+                                intent.putExtra("USERID", account);
+                                LoginActivity.this.startActivity(intent);
+                                LoginActivity.this.finish();
+                                loginHandler.sendEmptyMessage(LOGIN_SUCCESS);
+                            } catch (XMPPException e) {
+                                XmppConnectionImpl.closeConnection();
+                                loginHandler.sendEmptyMessage(LOGIN_ERROR);
+                            }
+                        }
+                    }).start();
+                }
+            }
+        });
+    }
 
-	public String getAccount() {
-		return account;
-	}
+    private Handler loginHandler = new Handler() {
 
-	public void setAccount(String account) {
-		this.account = account;
-	}
+                                     public void handleMessage(android.os.Message msg) {
 
-	public String getPasswd() {
-		return passwd;
-	}
+                                         if (msg.what == LOGIN_SUCCESS) {
+                                             Toast.makeText(gContext, "µÇÂ¼...£¡", Toast.LENGTH_SHORT).show();
+                                         } else if (msg.what == LOGIN_ERROR) {
 
-	public void setPasswd(String passwd) {
-		this.passwd = passwd;
-	}
+                                             Toast.makeText(gContext, "µÇÂ¼Ê§°Ü£¡", Toast.LENGTH_SHORT).show();
+                                         }
+                                     };
+                                 };
+
+    public String getServerIp() {
+        return serverIp;
+    }
+
+    public void setServerIp(String serverIp) {
+        this.serverIp = serverIp;
+    }
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
+    public String getPasswd() {
+        return passwd;
+    }
+
+    public void setPasswd(String passwd) {
+        this.passwd = passwd;
+    }
 }
