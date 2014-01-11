@@ -27,16 +27,20 @@ public class DbConstant {
     public static final String TM_MSG_SENDER_ID             = "MSG_SENDER_ID";
     public static final String TM_MSG_SENDER_NAME           = "MSG_SENDER_NAME";
     public static final String TM_LASTED_MSG_CONTENT        = "LASTED_MSG_CONTENT";
-    public static final String TM_MSG_UNREAD_NUM            = "MSG_UNREAD_NUM"; //
+    public static final String TM_MSG_RECEIVER_NAME         = "MSG_RECEIVER_NAME";
+    public static final String TM_MSG_UNREAD_NUM            = "MSG_UNREAD_NUM";           //
     public static final String TM_LASTED_MSG_RECEIVED_TIME  = "LASTED_MSG_RECEIVED_TIME";
 
     //
     public static final String IM_TABLE_NAME                = "ING_MSG_SF";
     public static final String IM_ING_MSG_ID                = "ING_ING_MSG_ID";
+    public static final String IM_PHOTO                     = "PHOTO";
     public static final String IM_MSG_SENDER_ID             = "ING_MSG_SENDER_ID";
     public static final String IM_MSG_SENDER_NAME           = "MSG_SENDER_NAME";
     public static final String IM_MSG_SENDED_TIME           = "MSG_SENDED_TIME";
     public static final String IM_MSG_CONTENT               = "MSG_CONTENT";
+    public static final String IM_MSG_IN_OR_OUT             = "MSG_IN_OR_OUT";
+    public static final String IM_MSG_RECEIVER_NAME         = "MSG_RECEIVER_NAME";
     public static final String IM_MSG_RECEIVED_TIME         = "MSG_RECEIVED_TIME";
 
     //

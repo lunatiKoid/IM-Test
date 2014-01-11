@@ -1,5 +1,8 @@
 package com.alibaba.rfq.sourcingfriends.msgcenter;
 
+import java.io.ByteArrayOutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -7,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.rfq.sourcingfriends.LoginActivity;
 import com.alibaba.rfq.sourcingfriends.R;
 import com.alibaba.rfq.sourcingfriends.db.DatabaseService;
 import com.alibaba.rfq.sourcingfriends.db.DbConstant;
@@ -14,6 +18,7 @@ import com.alibaba.rfq.sourcingfriends.service.XmppService;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -78,15 +83,20 @@ public class TradeMessageActivity extends Activity {
                                              DbConstant.TM_MSG_UNREAD_NUM, DbConstant.TM_LASTED_MSG_RECEIVED_TIME },
                                      null, null);
         while (cursor.moveToNext()) {
-
             String senderName = cursor.getString(cursor.getColumnIndex(DbConstant.TM_MSG_SENDER_NAME));
             String senderMsg = cursor.getString(cursor.getColumnIndex(DbConstant.TM_LASTED_MSG_CONTENT));
-            Date lastedMsgTime = new Date(cursor.getLong(cursor.getColumnIndex(DbConstant.TM_LASTED_MSG_RECEIVED_TIME)));
+            Long myDate = cursor.getLong(cursor.getColumnIndex(DbConstant.TM_LASTED_MSG_RECEIVED_TIME));
+
+            Date lastedMsgTime = new Date(myDate);
+            Log.i("TradeMessageActivity", lastedMsgTime.toLocaleString());
+
             int msgUnreadNum = cursor.getInt(cursor.getColumnIndex(DbConstant.TM_MSG_UNREAD_NUM));
             // to be changed
             Bitmap photo = BitmapFactory.decodeResource(this.getResources(), R.drawable.user_she_photo);
             TradeMsg one = new TradeMsg(photo, senderMsg, msgUnreadNum, lastedMsgTime, senderName);
+            tradeMap.put(one.name, one);
             tradeMsgList.add(one);
+            Log.i("TradeMessageActivity", "history username:" + one.name);
         }
         return tradeMsgList;
     }
@@ -145,17 +155,7 @@ public class TradeMessageActivity extends Activity {
             // tem
             Bitmap photo = BitmapFactory.decodeResource(gContext.getResources(), R.drawable.user_she_photo);
 
-            // db
-            DatabaseService dbService = new DatabaseService(gContext);
-            Cursor cursor;
-            cursor = dbService.select2DO(DbConstant.TM_TABLE_NAME, new String[] { DbConstant.TM_MSG_UNREAD_NUM },
-
-            null, null);
-            int msgUnreadNum=0;
-            while (cursor.moveToNext()) {
-                msgUnreadNum = cursor.getInt(cursor.getColumnIndex(DbConstant.TM_MSG_UNREAD_NUM));
-            }
-            TradeMsg one = new TradeMsg(photo, aMsg, msgUnreadNum, new Date(), userName);
+            TradeMsg one = new TradeMsg(photo, aMsg, 1, new Date(), userName);
             android.os.Message msg = handler.obtainMessage();
             msg.what = TRADE_MSG_RECEIVE;
             msg.obj = one;
@@ -172,45 +172,77 @@ public class TradeMessageActivity extends Activity {
                                             // 获取消息并显示
 
                                             TradeMsg one = (TradeMsg) msg.obj;
+                                            // db
+                                            DatabaseService dbService = new DatabaseService(gContext);
+                                            ContentValues value2intoIM = new ContentValues();
 
-                                            if (false == tradeMap.containsKey(one.name)) {  // new msg
+                                            // Bitmap.CompressFormat.JPEG 和 Bitmap.CompressFormat.PNG JPEG 与 PNG
+                                            // 的是区别在于 JPEG是有损数据图像，PNG使用从LZ77派生的无损数据压缩算法。
+                                            // 这里建议使用PNG格式保存 100 表示的是质量为100%。当然，也可以改变成你所需要的百分比质量。 os 是定义的字节输出流
+                                            // .compress() 方法是将Bitmap压缩成指定格式和质量的输出流
+                                            final ByteArrayOutputStream os = new ByteArrayOutputStream();
+                                            Bitmap bmp = one.photo;
+                                            bmp.compress(Bitmap.CompressFormat.PNG, 100, os);
+
+                                            value2intoIM.put(DbConstant.IM_PHOTO, os.toByteArray());
+                                            value2intoIM.put(DbConstant.IM_MSG_SENDER_NAME, one.name);
+                                            value2intoIM.put(DbConstant.IM_MSG_RECEIVER_NAME,
+                                                             LoginActivity.loginAct.getAccount());
+                                            value2intoIM.put(DbConstant.IM_MSG_CONTENT, one.msg);
+                                            value2intoIM.put(DbConstant.IM_MSG_RECEIVED_TIME, one.lastMsgDate.getTime());
+                                            value2intoIM.put(DbConstant.IM_MSG_IN_OR_OUT, "IN");
+
+                                            dbService.insertByDO(DbConstant.IM_TABLE_NAME, value2intoIM);
+
+                                            if (false == tradeMap.containsKey(one.name)) { // new msg
+
                                                 tradeMap.put(one.name, one);
                                                 listData.add(one);
-                                                
 
-                                                // db
-                                                   DatabaseService dbService = new DatabaseService(gContext);
-                                                   ContentValues values = new ContentValues();
-                                                   
-                                                  final ByteArrayOutputStream os = new ByteArrayOutputStream();
-                                                    Bitmap bmp = one.photo;
-                                                    bmp.compress(Bitmap.CompressFormat.PNG, 100, os);
-                                                    values.put("photo", os.toByteArray());
-                                                   
-                                                    //Bitmap.CompressFormat.JPEG 和 Bitmap.CompressFormat.PNG JPEG 与 PNG 的是区别在于 JPEG是有损数据图像，PNG使用从LZ77派生的无损数据压缩算法。
-                                                    //这里建议使用PNG格式保存 100 表示的是质量为100%。当然，也可以改变成你所需要的百分比质量。 os 是定义的字节输出流 .compress() 方法是将Bitmap压缩成指定格式和质量的输出流
-                                                   
-                                                    values.put("name", person.getUserName());
-                                                    values.put("passwd", person.getPasswd());
-                                                    values.put("company", person.getCompanyName());
-                                                   
-                                                   dbService.insertByDO(DbConstant.TM_TABLE_NAME, values);
-                                                   
-                                            } else {  // update nums,msgcontent, time
-                                                
+                                                ContentValues values = new ContentValues();
+
+                                                values.put(DbConstant.TM_PHOTO, os.toByteArray());
+                                                values.put(DbConstant.TM_MSG_SENDER_NAME, one.name);
+                                                values.put(DbConstant.TM_MSG_RECEIVER_NAME,
+                                                           LoginActivity.loginAct.getAccount());
+                                                values.put(DbConstant.TM_LASTED_MSG_CONTENT, one.msg);
+                                                values.put(DbConstant.TM_LASTED_MSG_RECEIVED_TIME,
+                                                           one.lastMsgDate.getTime());
+                                                values.put(DbConstant.TM_MSG_UNREAD_NUM, one.msgUnreadNum);
+
+                                                dbService.insertByDO(DbConstant.TM_TABLE_NAME, values);
+
+                                            } else { // update nums,msgcontent, time
+
                                                 Iterator<TradeMsg> it = listData.iterator();
+                                                TradeMsg tem = null;
                                                 while (it.hasNext()) {
-                                                    TradeMsg tem = it.next();
+                                                    tem = it.next();
                                                     if (tem.name.equalsIgnoreCase(one.name)) {
                                                         tem.msg = one.msg;
+                                                        tem.lastMsgDate = one.lastMsgDate;
+                                                        tem.msgUnreadNum += 1;
                                                         break;
                                                     }
                                                 }
-                                                
-                                             // db
-                                                DatabaseService dbService = new DatabaseService(gContext);
-                                                
-                                                dbService.update(DbConstant.TM_TABLE_NAME, );
+
+                                                ContentValues values = new ContentValues();
+                                                values.put(DbConstant.TM_LASTED_MSG_CONTENT, tem.msg);
+                                                values.put(DbConstant.TM_MSG_UNREAD_NUM, tem.msgUnreadNum);
+                                                values.put(DbConstant.TM_LASTED_MSG_RECEIVED_TIME,
+                                                           tem.lastMsgDate.getTime());
+
+                                                String whereClause = (DbConstant.TM_MSG_SENDER_NAME + "=? AND ");
+                                                whereClause += (DbConstant.TM_MSG_RECEIVER_NAME + "=?");
+                                                String[] whereArgs = new String[] { one.name,
+            LoginActivity.loginAct.getAccount() };
+
+                                                if (1 == dbService.update(DbConstant.TM_TABLE_NAME, values,
+                                                                          whereClause, whereArgs)) {
+                                                    Log.i("TradeMessageActivity", "update success");
+                                                } else {
+                                                    Log.i("TradeMessageActivity", "update err");
+                                                }
                                             }
                                             // 刷新适配器
                                             tradeMsgAdapter.notifyDataSetChanged();
@@ -278,7 +310,7 @@ public class TradeMessageActivity extends Activity {
             vHolder.userImageView.setImageBitmap(one.photo);
             vHolder.nameTextview.setText(one.name);
             vHolder.MsgTextview.setText(one.msg);
-            vHolder.lastMsgDateTextView.setText(one.lastMsgDate.toGMTString());
+            vHolder.lastMsgDateTextView.setText(one.lastMsgDate.toLocaleString());
 
             return convertView;
         }

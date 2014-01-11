@@ -66,10 +66,10 @@ public class DatabaseService {
     // }
 
     // 更新数据 public
-    void update(String tableName, ContentValues values, String whereClause, String[] whereArgs) {
+    public int update(String tableName, ContentValues values, String whereClause, String[] whereArgs) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        db.update(tableName, values, whereClause, whereArgs);
+        return db.update(tableName, values, whereClause, whereArgs);
         // db.execSQL("update USER_PROFILE_RFQ set name=? ,passwd=?, company=?, photo=? where user_id=?", new Object[] {
         // person.getUserName(), person.getPasswd(), person.getCompanyName(), person.getPhoto(), person.getId() });
     }

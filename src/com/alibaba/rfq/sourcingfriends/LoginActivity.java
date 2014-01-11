@@ -95,6 +95,14 @@ public class LoginActivity extends Activity {
             while (cursor.moveToNext()) {
                 account = cursor.getString(cursor.getColumnIndex(DbConstant.UL_NAME));
                 passwd = cursor.getString(cursor.getColumnIndex(DbConstant.UL_PASSWD));
+                Log.i("LoginActivity", "auto login ...");
+                Toast.makeText(gContext, "×Ô¶¯µÇÂ¼...", Toast.LENGTH_SHORT).show();
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
 
                 loginThread.start();
 

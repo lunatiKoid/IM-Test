@@ -139,7 +139,7 @@ public class IngMessageActivity extends Activity {
             // 收到来自 服务器 的消息
             if (userName.equalsIgnoreCase(SERVER_DOMAIN)) {
                 // 获取用户、消息、时间、IN
-                Msg one = new Msg(userName, aMsg, new Date().toGMTString(), "IN");
+                Msg one = new Msg(userName, aMsg, new Date().toLocaleString(), "IN");
                 // 在handler里取出来显示消息
                 android.os.Message msg = handler.obtainMessage();
                 msg.what = ING_MSG_RECEIVE;
@@ -147,7 +147,7 @@ public class IngMessageActivity extends Activity {
                 msg.sendToTarget();
 
             } else {
-                Msg one = new Msg(userName, aMsg, new Date().toGMTString(), "IN");
+                Msg one = new Msg(userName, aMsg, new Date().toLocaleString(), "IN");
                 // 在handler里取出来显示消息
                 android.os.Message msg = handler.obtainMessage();
                 msg.what = ING_MSG_RECEIVE;
@@ -246,7 +246,7 @@ public class IngMessageActivity extends Activity {
                     public void onClick(View v) {
                         // TODO Auto-generated method stub
                         Intent intent = new Intent();
-                        intent.putExtra("UserId", "" + useri.getId());
+                        //intent.putExtra("UserId", "" + useri.getId());
                         intent.setClass(context, UserDetailActivity.class);
                         context.startActivity(intent);
                     }
@@ -262,7 +262,7 @@ public class IngMessageActivity extends Activity {
                     public void onClick(View v) {
                         // TODO Auto-generated method stub
                         Intent intent = new Intent();
-                        intent.putExtra("UserId", "" + myself.getId());
+                        //intent.putExtra("UserId", "" + myself.getId());
                         intent.setClass(context, UserDetailActivity.class);
                         context.startActivity(intent);
                     }
