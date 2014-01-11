@@ -2,12 +2,19 @@ package com.alibaba.rfq.sourcingfriends;
 
 import java.util.Collection;
 import java.util.Properties;
+
+import com.alibaba.rfq.sourcingfriends.db.DatabaseService;
+import com.alibaba.rfq.sourcingfriends.db.DbConstant;
+import com.alibaba.rfq.sourcingfriends.service.XmppService;
 import com.alibaba.rfq.sourcingfriends.tarbar.ManagerCenterActivity;
 import com.alibaba.rfq.sourcingfriends.xmpp.impl.XmppConnectionImpl;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -22,11 +29,11 @@ import org.jivesoftware.smack.packet.Presence;
 public class LoginActivity extends Activity {
 
     public static LoginActivity loginAct;
-
+    public static final String  USER_NAME_LOGINED = "USER_NAME_LOGINED";
     private Context             gContext;
 
-    private static int          LOGIN_SUCCESS = 1;
-    private static int          LOGIN_ERROR   = 2;
+    private static int          LOGIN_SUCCESS     = 1;
+    private static int          LOGIN_ERROR       = 2;
 
     // server string
     private EditText            serverIpEditText;
@@ -62,45 +69,94 @@ public class LoginActivity extends Activity {
 
             public void onClick(View view) {
 
+                // judge the internet is connect
+                if (!isWifiConnected(gContext)) {
+                    Toast.makeText(gContext, "网络未连接，登录失败，请确定已经连接网络了！...", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 serverIp = serverIpEditText.getText().toString();
                 account = accountEditText.getText().toString();
                 passwd = passwdEditText.getText().toString();
 
-                Log.i("LoginActivity", "It's Here");
+                Log.i("LoginActivity", "Login to start");
                 if (!account.isEmpty() && !passwd.isEmpty()) {
-                    new Thread(new Runnable() {
 
-                        public void run() {
-
-                            try {
-                                // 连接
-                                XmppConnectionImpl.setServerIp(serverIp);
-                                // XmppConnectionImpl.getConnection().login(account, passwd);
-
-                                // get the offline msgs
-                                XmppConnectionImpl.getOfflineConnection().login(account, passwd);
-
-                                XmppConnectionImpl.ThenGetOffMsg(XmppConnectionImpl.getConnection());
-
-                                // 状态
-                                Presence presence = new Presence(Presence.Type.available);
-                                XmppConnectionImpl.getConnection().sendPacket(presence);
-
-                                Intent intent = new Intent();
-                                intent.setClass(LoginActivity.this, ManagerCenterActivity.class);
-                                intent.putExtra("USERID", account);
-                                LoginActivity.this.startActivity(intent);
-                                LoginActivity.this.finish();
-                                loginHandler.sendEmptyMessage(LOGIN_SUCCESS);
-                            } catch (XMPPException e) {
-                                XmppConnectionImpl.closeConnection();
-                                loginHandler.sendEmptyMessage(LOGIN_ERROR);
-                            }
-                        }
-                    }).start();
+                    loginThread.start();
                 }
             }
         });
+
+        if (isWifiConnected(gContext)) {
+            DatabaseService dbService = new DatabaseService(gContext);
+            Cursor cursor;
+            cursor = dbService.select2DO(DbConstant.UL_TABLE_NAME, new String[] { DbConstant.UL_NAME,
+                                                 DbConstant.UL_PASSWD }, new String[] { DbConstant.UL_ISLOGIN },
+                                         new String[] { Boolean.toString(true) });
+            while (cursor.moveToNext()) {
+                account = cursor.getString(cursor.getColumnIndex(DbConstant.UL_NAME));
+                passwd = cursor.getString(cursor.getColumnIndex(DbConstant.UL_PASSWD));
+
+                loginThread.start();
+
+                break;
+            }
+
+        }
+    }
+
+    private Thread loginThread = new Thread(new Runnable() {
+
+                                   public void run() {
+
+                                       try {
+                                           // 连接
+                                           XmppConnectionImpl.setServerIp(serverIp);
+                                           // XmppConnectionImpl.getConnection().login(account, passwd);
+
+                                           // get the offline msgs
+                                           XmppConnectionImpl.getOfflineConnection().login(account, passwd);
+
+                                           XmppConnectionImpl.ThenGetOffMsg(XmppConnectionImpl.getConnection());
+
+                                           // 状态
+                                           Presence presence = new Presence(Presence.Type.available);
+                                           XmppConnectionImpl.getConnection().sendPacket(presence);
+
+                                           //
+                                           Intent intent = new Intent();
+                                           intent.setClass(LoginActivity.this, ManagerCenterActivity.class);
+                                           intent.putExtra(USER_NAME_LOGINED, account);
+                                           LoginActivity.this.startActivity(intent);
+                                           LoginActivity.this.finish();
+                                           loginHandler.sendEmptyMessage(LOGIN_SUCCESS);
+
+                                       } catch (XMPPException e) {
+                                           XmppConnectionImpl.closeConnection();
+                                           loginHandler.sendEmptyMessage(LOGIN_ERROR);
+                                       }
+                                   }
+                               });
+
+    public boolean isNetworkConnected(Context context) {
+        if (context != null) {
+            ConnectivityManager mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+            if (mNetworkInfo != null) {
+                return mNetworkInfo.isAvailable();
+            }
+        }
+        return false;
+    }
+
+    public boolean isWifiConnected(Context context) {
+        if (context != null) {
+            ConnectivityManager mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo mWiFiNetworkInfo = mConnectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            if (mWiFiNetworkInfo != null) {
+                return mWiFiNetworkInfo.isAvailable();
+            }
+        }
+        return false;
     }
 
     private Handler loginHandler = new Handler() {
@@ -108,7 +164,13 @@ public class LoginActivity extends Activity {
                                      public void handleMessage(android.os.Message msg) {
 
                                          if (msg.what == LOGIN_SUCCESS) {
+
+                                             // start xmpp service
+                                             Intent intent = new Intent(gContext, XmppService.class);
+                                             startService(intent);
+
                                              Toast.makeText(gContext, "登录...！", Toast.LENGTH_SHORT).show();
+
                                          } else if (msg.what == LOGIN_ERROR) {
 
                                              Toast.makeText(gContext, "登录失败！", Toast.LENGTH_SHORT).show();

@@ -7,92 +7,110 @@ import android.graphics.Bitmap;
 
 public class UserProfileDTO {
 
-	private int id;
-	private String userName;
-	private String passwd;
-	private Bitmap photo;
-	private String companyName;
-	//private List<String> feedList;
-	//private String latestFeed;
-	//private Date latestTime;
+    private String userName;
+    private Bitmap photo;
+    private String bizType;
+    private String companyName;
+    private String address;
+    private String miniSite;
+    private long   added;
+    private String mainProducts;
+    private String recentlyQuotedBRequest;
 
-	
-	public UserProfileDTO(String name,String passwd,String company,Bitmap photo) {
-		this.userName = name;
-		this.passwd=passwd;
-		this.companyName = company;
-		this.photo = photo;
-	}
-	
-	public String getPasswd() {
-		return passwd;
-	}
+    public UserProfileDTO(String name, Bitmap photo, String company, String mainProducts) {
+        this.userName = name;
+        this.photo = photo;
+        this.bizType = "";
+        this.companyName = company;
+        this.address = "";
+        this.miniSite = "";
+        this.added = 0;
+        this.mainProducts = mainProducts;
+        this.recentlyQuotedBRequest = "";
+    }
 
-	public void setPasswd(String passwd) {
-		this.passwd = passwd;
-	}
+    public UserProfileDTO(String name, Bitmap photo, String bizType, String company, String address, String miniSite,
+                          long added, String mainProducts, String recentlyQuotedBRequest) {
+        this.userName = name;
+        this.photo = photo;
+        this.bizType = bizType;
+        this.companyName = company;
+        this.address = address;
+        this.miniSite = miniSite;
+        this.added = added;
+        this.mainProducts = mainProducts;
+        this.recentlyQuotedBRequest = recentlyQuotedBRequest;
+    }
 
-	public UserProfileDTO(int id,String name,String passwd,String company,Bitmap photo) {
-		this.id = id;
-		this.passwd=passwd;
-		this.userName = name;
-		this.companyName = company;
-		this.photo = photo;
-	}
-	
-	public int getId() {
-		return id;
-	}
+    public String getBizType() {
+        return bizType;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setBizType(String bizType) {
+        this.bizType = bizType;
+    }
 
-	public String getUserName() {
-		return userName;
-	}
+    public String getAddress() {
+        return address;
+    }
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
-	public Bitmap getPhoto() {
-		return photo;
-	}
+    public String getMiniSite() {
+        return miniSite;
+    }
 
-	public void setPhoto(Bitmap photo) {
-		this.photo = photo;
-	}
+    public void setMiniSite(String miniSite) {
+        this.miniSite = miniSite;
+    }
 
-	public String getCompanyName() {
-		return companyName;
-	}
+    public long getAdded() {
+        return added;
+    }
 
-	public void setCompanyName(String companyName) {
-		this.companyName = companyName;
-	}
+    public void setAdded(long added) {
+        this.added = added;
+    }
 
-//	public List<String> getFeedList() {
-//		return feedList;
-//	}
-//
-//	public void setFeedList(List<String> feedList) {
-//		this.feedList = feedList;
-//	}
-//
-//	public String getLatestFeed() {
-//		return latestFeed;
-//	}
-//
-//	public void setLatestFeed(String latestFeed) {
-//		this.latestFeed = latestFeed;
-//	}
-//
-//	public Date getLatestTime() {
-//		return latestTime;
-//	}
-//
-//	public void setLatestTime(Date latestTime) {
-//		this.latestTime = latestTime;
-//	}
+    public String getMainProducts() {
+        return mainProducts;
+    }
+
+    public void setMainProducts(String mainProducts) {
+        this.mainProducts = mainProducts;
+    }
+
+    public String getRecentlyQuotedBRequest() {
+        return recentlyQuotedBRequest;
+    }
+
+    public void setRecentlyQuotedBRequest(String recentlyQuotedBRequest) {
+        this.recentlyQuotedBRequest = recentlyQuotedBRequest;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public Bitmap getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(Bitmap photo) {
+        this.photo = photo;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
 }

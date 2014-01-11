@@ -7,19 +7,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.jivesoftware.smack.Chat;
-import org.jivesoftware.smack.ChatManager;
-import org.jivesoftware.smack.ChatManagerListener;
-import org.jivesoftware.smack.MessageListener;
-import org.jivesoftware.smack.packet.Message;
-
 import com.alibaba.rfq.sourcingfriends.R;
-import com.alibaba.rfq.sourcingfriends.xmpp.impl.TimeRender;
-import com.alibaba.rfq.sourcingfriends.xmpp.impl.XmppConnectionImpl;
+import com.alibaba.rfq.sourcingfriends.db.DatabaseService;
+import com.alibaba.rfq.sourcingfriends.db.DbConstant;
+import com.alibaba.rfq.sourcingfriends.service.XmppService;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -45,31 +43,51 @@ public class TradeMessageActivity extends Activity {
         public Bitmap photo;
         public String name;
         public String msg;
+        public int    msgUnreadNum;
         public Date   lastMsgDate;
 
-        public TradeMsg(Bitmap photo, String msg, Date lastMsgDate, String name) {
+        public TradeMsg(Bitmap photo, String msg, int num, Date lastMsgDate, String name) {
             this.photo = photo;
             this.name = name;
             this.msg = msg;
+            this.msgUnreadNum = num;
             this.lastMsgDate = lastMsgDate;
         }
     }
 
-    private static final int    TRADE_MSG_RECEIVE = 3;
+    public static final String USER_NAME_TO_TALK = "USER_NAME_TO_TALK";
+    private static final int   TRADE_MSG_RECEIVE = 3;
+    private TradeMsgReceiver   receiver;
 
-    private ChatManager         cm;
-    private ChatManagerListener cmListener;
+    private Context            gContext;
+    private TradeMsgAdapter    tradeMsgAdapter;
+    private ListView           tradeMsgListView;
+    List<TradeMsg>             listData;
 
-    private Context             gContext;
-    private TradeMsgAdapter     tradeMsgAdapter;
-    private ListView            tradeMsgListView;
-    List<TradeMsg>              listData;
-
-    Map<String, TradeMsg>       tradeMap          = new HashMap<String, TradeMsg>();
+    Map<String, TradeMsg>      tradeMap          = new HashMap<String, TradeMsg>();
 
     List<TradeMsg> getData() {
         // get data from the openfire server
         List<TradeMsg> tradeMsgList = new ArrayList<TradeMsg>();
+
+        // db
+        DatabaseService dbService = new DatabaseService(gContext);
+        Cursor cursor;
+        cursor = dbService.select2DO(DbConstant.TM_TABLE_NAME,
+                                     new String[] { DbConstant.TM_MSG_SENDER_NAME, DbConstant.TM_LASTED_MSG_CONTENT,
+                                             DbConstant.TM_MSG_UNREAD_NUM, DbConstant.TM_LASTED_MSG_RECEIVED_TIME },
+                                     null, null);
+        while (cursor.moveToNext()) {
+
+            String senderName = cursor.getString(cursor.getColumnIndex(DbConstant.TM_MSG_SENDER_NAME));
+            String senderMsg = cursor.getString(cursor.getColumnIndex(DbConstant.TM_LASTED_MSG_CONTENT));
+            Date lastedMsgTime = new Date(cursor.getLong(cursor.getColumnIndex(DbConstant.TM_LASTED_MSG_RECEIVED_TIME)));
+            int msgUnreadNum = cursor.getInt(cursor.getColumnIndex(DbConstant.TM_MSG_UNREAD_NUM));
+            // to be changed
+            Bitmap photo = BitmapFactory.decodeResource(this.getResources(), R.drawable.user_she_photo);
+            TradeMsg one = new TradeMsg(photo, senderMsg, msgUnreadNum, lastedMsgTime, senderName);
+            tradeMsgList.add(one);
+        }
         return tradeMsgList;
     }
 
@@ -93,13 +111,9 @@ public class TradeMessageActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 {
-                    Log.i("TradeMessageActivity", "cm.listener.size1=" + cm.getChatListeners().size());
-                    cm.removeChatListener(cmListener);
-                    Log.i("TradeMessageActivity", "cm.listener.size2=" + cm.getChatListeners().size());
-
                     // TODO Auto-generated method stub
                     Intent intent = new Intent();
-                    intent.putExtra("UserId", listData.get(position).name);
+                    intent.putExtra(USER_NAME_TO_TALK, listData.get(position).name);
                     intent.setClass(TradeMessageActivity.this, IngMessageActivity.class);
                     startActivity(intent);
                 }
@@ -109,40 +123,44 @@ public class TradeMessageActivity extends Activity {
 
         });
 
-        // xmpp st
-        cm = XmppConnectionImpl.getConnection().getChatManager();
+        // register xmpp service com.alibaba.rfq.sourcingfriends.service.XmppService
+        receiver = new TradeMsgReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(XmppService.actionName);
+        registerReceiver(receiver, filter);
+    }
 
-        cmListener = new ChatManagerListener() {
+    /**
+     * 广播接收器
+     */
+    private class TradeMsgReceiver extends BroadcastReceiver {
 
-            @Override
-            public void chatCreated(Chat chat, boolean able) {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle bundle = intent.getExtras();
 
-                chat.addMessageListener(new MessageListener() {
+            String aMsg = bundle.getString("MSGS");
+            String userName = bundle.getString("USERNAME");
 
-                    @Override
-                    public void processMessage(Chat chat2, Message message) {
-                        Log.v("--tags--", "--tags-form--" + message.getFrom());
-                        Log.v("--tags--", "--tags-message--" + message.getBody());
+            // tem
+            Bitmap photo = BitmapFactory.decodeResource(gContext.getResources(), R.drawable.user_she_photo);
 
-                        // tem
-                        Bitmap photo = BitmapFactory.decodeResource(gContext.getResources(),
-                                                                    R.drawable.trade_user_photo);
-                        // 获取头像，消息、时间、用户
-                        TradeMsg one = new TradeMsg(photo, message.getBody(), new Date(), message.getFrom());
+            // db
+            DatabaseService dbService = new DatabaseService(gContext);
+            Cursor cursor;
+            cursor = dbService.select2DO(DbConstant.TM_TABLE_NAME, new String[] { DbConstant.TM_MSG_UNREAD_NUM },
 
-                        // 在handler里取出来显示消息
-                        android.os.Message msg = handler.obtainMessage();
-                        msg.what = TRADE_MSG_RECEIVE;
-                        msg.obj = one;
-                        msg.sendToTarget();
-
-                        Log.i("TradeMessageActivity", message.getFrom() + "-> msg:" + message.getBody() + " date:"
-                                                      + TimeRender.getDate().toString());
-                    }
-                });
+            null, null);
+            int msgUnreadNum=0;
+            while (cursor.moveToNext()) {
+                msgUnreadNum = cursor.getInt(cursor.getColumnIndex(DbConstant.TM_MSG_UNREAD_NUM));
             }
-        };
-        Log.i("TradeMessageActivity", "add chat listener");
+            TradeMsg one = new TradeMsg(photo, aMsg, msgUnreadNum, new Date(), userName);
+            android.os.Message msg = handler.obtainMessage();
+            msg.what = TRADE_MSG_RECEIVE;
+            msg.obj = one;
+            msg.sendToTarget();
+        }
     }
 
     private Handler handler = new Handler() {
@@ -155,10 +173,31 @@ public class TradeMessageActivity extends Activity {
 
                                             TradeMsg one = (TradeMsg) msg.obj;
 
-                                            if (false == tradeMap.containsKey(one.name)) {
+                                            if (false == tradeMap.containsKey(one.name)) {  // new msg
                                                 tradeMap.put(one.name, one);
                                                 listData.add(one);
-                                            } else {
+                                                
+
+                                                // db
+                                                   DatabaseService dbService = new DatabaseService(gContext);
+                                                   ContentValues values = new ContentValues();
+                                                   
+                                                  final ByteArrayOutputStream os = new ByteArrayOutputStream();
+                                                    Bitmap bmp = one.photo;
+                                                    bmp.compress(Bitmap.CompressFormat.PNG, 100, os);
+                                                    values.put("photo", os.toByteArray());
+                                                   
+                                                    //Bitmap.CompressFormat.JPEG 和 Bitmap.CompressFormat.PNG JPEG 与 PNG 的是区别在于 JPEG是有损数据图像，PNG使用从LZ77派生的无损数据压缩算法。
+                                                    //这里建议使用PNG格式保存 100 表示的是质量为100%。当然，也可以改变成你所需要的百分比质量。 os 是定义的字节输出流 .compress() 方法是将Bitmap压缩成指定格式和质量的输出流
+                                                   
+                                                    values.put("name", person.getUserName());
+                                                    values.put("passwd", person.getPasswd());
+                                                    values.put("company", person.getCompanyName());
+                                                   
+                                                   dbService.insertByDO(DbConstant.TM_TABLE_NAME, values);
+                                                   
+                                            } else {  // update nums,msgcontent, time
+                                                
                                                 Iterator<TradeMsg> it = listData.iterator();
                                                 while (it.hasNext()) {
                                                     TradeMsg tem = it.next();
@@ -167,6 +206,11 @@ public class TradeMessageActivity extends Activity {
                                                         break;
                                                     }
                                                 }
+                                                
+                                             // db
+                                                DatabaseService dbService = new DatabaseService(gContext);
+                                                
+                                                dbService.update(DbConstant.TM_TABLE_NAME, );
                                             }
                                             // 刷新适配器
                                             tradeMsgAdapter.notifyDataSetChanged();
@@ -250,7 +294,7 @@ public class TradeMessageActivity extends Activity {
     @Override
     public synchronized void onResume() {
         super.onResume();
-        cm.addChatListener(cmListener);
+        // if (cm.getChatListeners().size() <= 0) cm.addChatListener(cmListener);
         Log.i("TradeMessageActivity", "on Resume");
     }
 
@@ -270,6 +314,8 @@ public class TradeMessageActivity extends Activity {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        // 不要忘了这一步
+        unregisterReceiver(receiver);
         Log.i("TradeMessageActivity", "on Destroy");
     }
 

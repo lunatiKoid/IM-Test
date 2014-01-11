@@ -33,7 +33,9 @@ public final class R {
         public static final int tabbar_msg=0x7f020005;
         public static final int tem_back_ground=0x7f020006;
         public static final int trade_user_photo=0x7f020007;
-        public static final int yliang=0x7f020008;
+        public static final int user_me_photo=0x7f020008;
+        public static final int user_she_photo=0x7f020009;
+        public static final int yliang=0x7f02000a;
     }
     public static final class id {
         public static final int ContactListViewId=0x7f090001;

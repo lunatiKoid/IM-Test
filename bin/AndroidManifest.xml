@@ -8,39 +8,49 @@
         android:minSdkVersion="9"
         android:targetSdkVersion="18" />
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-	<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-	<uses-permission android:name="android.permission.VIBRATE" />
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
-    
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme"
-        >
-        
+        android:theme="@style/AppTheme" >
         <activity
             android:name="com.alibaba.rfq.sourcingfriends.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="LoginActivity"></activity>
-        <activity android:name="com.alibaba.rfq.sourcingfriends.msgcenter.TradeMessageActivity" ></activity>
-        <activity android:name="com.alibaba.rfq.sourcingfriends.contactlist.ContactListActivity"></activity>
-        <activity android:name=".tarbar.ManagerCenterActivity"></activity>
-        <activity 
-            android:name=".msgcenter.IngMessageActivity" 
-            android:windowSoftInputMode="adjustResize">
-        </activity>        
-        <activity android:name=".contactlist.UserDetailActivity"></activity>
+        <activity android:name="LoginActivity" >
+        </activity>
+        <activity android:name="com.alibaba.rfq.sourcingfriends.msgcenter.TradeMessageActivity" >
+        </activity>
+        <activity android:name="com.alibaba.rfq.sourcingfriends.contactlist.ContactListActivity" >
+        </activity>
+        <activity android:name=".tarbar.ManagerCenterActivity" >
+        </activity>
+        <activity
+            android:name=".msgcenter.IngMessageActivity"
+            android:windowSoftInputMode="adjustResize" >
+        </activity>
+        <activity android:name=".contactlist.UserDetailActivity" >
+        </activity>
+
+        <service android:name=".service.XmppService" >
+            <intent-filter>
+                <action android:name="com.alibaba.rfq.sourcingfriends.service.XmppService" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

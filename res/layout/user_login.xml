@@ -3,89 +3,89 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-	<EditText
-	    android:id="@+id/serverIpEditTextId"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_alignParentRight="true"
-	    android:layout_alignParentTop="true"
-	    android:text="10.0.2.2"
-	    android:ems="10" />
+    <EditText
+        android:id="@+id/serverIpEditTextId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:ems="10"
+        android:text="192.168.16.2" />
 
-   <RelativeLayout
-       android:id="@+id/accountRelativeLayout"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:layout_alignParentLeft="true"
-       android:layout_alignParentRight="true"
-       android:layout_marginTop="100dp" >
+    <RelativeLayout
+        android:id="@+id/accountRelativeLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="100dp" >
 
-       <TextView
-           android:id="@+id/accountTextView"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_alignParentLeft="true"
-           android:layout_alignTop="@+id/accountEditText"
-           android:layout_marginLeft="18dp"
-           android:text="Account" />
+        <TextView
+            android:id="@+id/accountTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignTop="@+id/accountEditText"
+            android:layout_marginLeft="18dp"
+            android:text="Account" />
 
-       <EditText
-           android:id="@+id/accountEditText"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_alignParentTop="true"
-           android:layout_marginTop="109dp"
-           android:text="asdf@sf.alibaba.com"
-           android:layout_toRightOf="@+id/accountTextView"
-           android:ems="10" />
-   </RelativeLayout>
+        <EditText
+            android:id="@+id/accountEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="109dp"
+            android:layout_toRightOf="@+id/accountTextView"
+            android:ems="10"
+            android:text="asdf@sf.alibaba.com" />
+    </RelativeLayout>
 
-   <RelativeLayout
-       android:id="@+id/passwdRelativeLayout"
-       android:layout_width="wrap_content"
-       android:layout_height="30dp"
-       android:layout_alignParentLeft="true"
-       android:layout_alignParentRight="true"
-       android:layout_below="@+id/accountRelativeLayout"
-       android:layout_marginTop="26dp" >
+    <RelativeLayout
+        android:id="@+id/passwdRelativeLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/accountRelativeLayout"
+        android:layout_marginTop="26dp" >
 
-       <TextView
-           android:id="@+id/passwdTextView"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_alignParentLeft="true"
-           android:layout_alignTop="@+id/passwdEditText"
-           android:layout_marginLeft="18dp"
-           android:text="passwd" />
+        <TextView
+            android:id="@+id/passwdTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignTop="@+id/passwdEditText"
+            android:layout_marginLeft="18dp"
+            android:text="passwd" />
 
-       <EditText
-           android:id="@+id/passwdEditText"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_alignParentTop="true"
-           android:layout_toRightOf="@+id/passwdTextView"
-           android:text="asdf"
-           android:ems="10" />
-   </RelativeLayout>
+        <EditText
+            android:id="@+id/passwdEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/passwdTextView"
+            android:ems="10"
+            android:text="asdf" />
+    </RelativeLayout>
 
-   <Button
-       android:id="@+id/loginButton"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:layout_alignParentLeft="true"
-       android:layout_alignRight="@+id/passwdRelativeLayout"
-       android:layout_below="@+id/passwdRelativeLayout"
-       android:layout_marginTop="47dp"
-       android:text="Login" />
+    <Button
+        android:id="@+id/loginButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/passwdRelativeLayout"
+        android:layout_below="@+id/passwdRelativeLayout"
+        android:layout_marginTop="47dp"
+        android:text="Login" />
 
-   <TextView
-       android:id="@+id/textView1"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:layout_alignBottom="@+id/serverIpEditTextId"
-       android:layout_alignParentLeft="true"
-       android:layout_alignParentTop="true"
-       android:layout_toLeftOf="@+id/serverIpEditTextId"
-       android:text="ServerIp:" />
-   
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/serverIpEditTextId"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/serverIpEditTextId"
+        android:text="ServerIp:" />
+
 </RelativeLayout>
