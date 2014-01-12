@@ -13,6 +13,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -117,6 +118,7 @@ public class LoginActivity extends Activity {
                                    public void run() {
 
                                        try {
+                                           // Toast.makeText(gContext, "µÇÂ¼ÖÐ...", Toast.LENGTH_SHORT).show();
                                            // Á¬½Ó
                                            XmppConnectionImpl.setServerIp(serverIp);
                                            // XmppConnectionImpl.getConnection().login(account, passwd);

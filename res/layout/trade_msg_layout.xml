@@ -8,7 +8,9 @@
         android:id="@+id/tradeUserImageViewId"
         android:layout_width="wrap_content"
         android:layout_height="80dp"
-        android:src="@drawable/bottom_bar_highlight" />
+        android:gravity="top|right"
+        android:src="@drawable/bottom_bar_highlight"
+        android:text="99+" />
 
     <LinearLayout
         android:layout_width="fill_parent"

@@ -16,6 +16,8 @@ public class UserProfileDTO {
     private long   added;
     private String mainProducts;
     private String recentlyQuotedBRequest;
+    private String quoTotalLastMonth;
+    private String quoAcLastMonth;
 
     public UserProfileDTO(String name, Bitmap photo, String company, String mainProducts) {
         this.userName = name;
@@ -27,10 +29,12 @@ public class UserProfileDTO {
         this.added = 0;
         this.mainProducts = mainProducts;
         this.recentlyQuotedBRequest = "";
+        this.quoTotalLastMonth = "";
+        this.quoAcLastMonth = "";
     }
 
     public UserProfileDTO(String name, Bitmap photo, String bizType, String company, String address, String miniSite,
-                          long added, String mainProducts, String recentlyQuotedBRequest) {
+                          long added, String mainProducts, String recentlyQuotedBRequest, String quoTotal, String quoAc) {
         this.userName = name;
         this.photo = photo;
         this.bizType = bizType;
@@ -40,6 +44,28 @@ public class UserProfileDTO {
         this.added = added;
         this.mainProducts = mainProducts;
         this.recentlyQuotedBRequest = recentlyQuotedBRequest;
+        this.quoTotalLastMonth = quoTotal;
+        this.quoAcLastMonth = quoAc;
+    }
+
+    
+    public String getQuoTotalLastMonth() {
+        return quoTotalLastMonth;
+    }
+
+    
+    public void setQuoTotalLastMonth(String quoTotalLastMonth) {
+        this.quoTotalLastMonth = quoTotalLastMonth;
+    }
+
+    
+    public String getQuoAcLastMonth() {
+        return quoAcLastMonth;
+    }
+
+    
+    public void setQuoAcLastMonth(String quoAcLastMonth) {
+        this.quoAcLastMonth = quoAcLastMonth;
     }
 
     public String getBizType() {

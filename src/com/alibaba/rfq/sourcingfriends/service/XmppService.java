@@ -1,5 +1,7 @@
 package com.alibaba.rfq.sourcingfriends.service;
 
+import java.util.Date;
+
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManager;
 import org.jivesoftware.smack.ChatManagerListener;
@@ -21,7 +23,10 @@ public class XmppService extends Service {
     // xmpp
     private ChatManager         cm;
     private ChatManagerListener cmListener;
-    public static String        actionName = "com.alibaba.rfq.sourcingfriends.service.XmppService";
+    public final static String  actionName   = "com.alibaba.rfq.sourcingfriends.service.XmppService";
+    public final static String  SENDERS_NAME = "USERNAME";
+    public final static String  SENDED_MSG   = "MSGS";
+    public final static String  RECEIVE_TIME = "RECEIVETIME";
 
     @Override
     public void onCreate() {
@@ -55,8 +60,9 @@ public class XmppService extends Service {
                                 // 发送特定action的广播
                                 Intent intent = new Intent();
                                 intent.setAction(actionName);
-                                intent.putExtra("MSGS", message.getBody());
-                                intent.putExtra("USERNAME", message.getFrom());
+                                intent.putExtra(SENDED_MSG, message.getBody());
+                                intent.putExtra(SENDERS_NAME, message.getFrom());
+                                intent.putExtra(RECEIVE_TIME, new Date().getTime());
                                 sendBroadcast(intent);
                             }
                         });

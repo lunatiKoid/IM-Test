@@ -111,13 +111,14 @@ public class DatabaseService {
             sql += " WHERE ";
             sql += (skeys[0] + "=? ");
             for (int i = 1; i < skeys.length; i++) {
-                sql += " AND";
-                sql += (skeys[0] + "=? ");
+                sql += " AND ";
+                sql += (skeys[i] + "=? ");
             }
-            Log.i("DatabaseService", sql);
+            Log.i("DatabaseService", sql + " " + svalues);
             cursor = db.rawQuery(sql, svalues);
 
         } else {
+            Log.i("DatabaseService", sql);
             cursor = db.rawQuery(sql, null);
         }
         return cursor;

@@ -67,7 +67,7 @@ public class TradeMessageActivity extends Activity {
     private Context            gContext;
     private TradeMsgAdapter    tradeMsgAdapter;
     private ListView           tradeMsgListView;
-    List<TradeMsg>             listData;
+    private List<TradeMsg>     listData;
 
     Map<String, TradeMsg>      tradeMap          = new HashMap<String, TradeMsg>();
 
@@ -81,7 +81,9 @@ public class TradeMessageActivity extends Activity {
         cursor = dbService.select2DO(DbConstant.TM_TABLE_NAME,
                                      new String[] { DbConstant.TM_MSG_SENDER_NAME, DbConstant.TM_LASTED_MSG_CONTENT,
                                              DbConstant.TM_MSG_UNREAD_NUM, DbConstant.TM_LASTED_MSG_RECEIVED_TIME },
-                                     null, null);
+                                     new String[] { DbConstant.TM_MSG_RECEIVER_NAME },
+                                     new String[] { LoginActivity.loginAct.getAccount() });
+
         while (cursor.moveToNext()) {
             String senderName = cursor.getString(cursor.getColumnIndex(DbConstant.TM_MSG_SENDER_NAME));
             String senderMsg = cursor.getString(cursor.getColumnIndex(DbConstant.TM_LASTED_MSG_CONTENT));
@@ -149,13 +151,13 @@ public class TradeMessageActivity extends Activity {
         public void onReceive(Context context, Intent intent) {
             Bundle bundle = intent.getExtras();
 
-            String aMsg = bundle.getString("MSGS");
-            String userName = bundle.getString("USERNAME");
-
+            String aMsg = bundle.getString(XmppService.SENDED_MSG);
+            String userName = bundle.getString(XmppService.SENDERS_NAME);
+            Date receiveTime = new Date(bundle.getLong(XmppService.RECEIVE_TIME));
             // tem
             Bitmap photo = BitmapFactory.decodeResource(gContext.getResources(), R.drawable.user_she_photo);
 
-            TradeMsg one = new TradeMsg(photo, aMsg, 1, new Date(), userName);
+            TradeMsg one = new TradeMsg(photo, aMsg, 1, receiveTime, userName);
             android.os.Message msg = handler.obtainMessage();
             msg.what = TRADE_MSG_RECEIVE;
             msg.obj = one;
