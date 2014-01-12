@@ -62,6 +62,7 @@ public class TradeMessageActivity extends Activity {
 
     public static final String USER_NAME_TO_TALK = "USER_NAME_TO_TALK";
     private static final int   TRADE_MSG_RECEIVE = 3;
+    private static final int   MAX_SHOW_LENGTH   = 22;
     private TradeMsgReceiver   receiver;
 
     private Context            gContext;
@@ -130,7 +131,8 @@ public class TradeMessageActivity extends Activity {
                     startActivity(intent);
                 }
 
-                Toast.makeText(getApplicationContext(), "click " + listData.get(position), Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getApplicationContext(), "click " + listData.get(position),
+                // Toast.LENGTH_SHORT).show();
             }
 
         });
@@ -311,12 +313,16 @@ public class TradeMessageActivity extends Activity {
             // show data
             vHolder.userImageView.setImageBitmap(one.photo);
             vHolder.nameTextview.setText(one.name);
-            vHolder.MsgTextview.setText(one.msg);
+            Log.i("TradeMessageActivity","MAX_SHOW_LENGTH"+one.msg.length());
+            if (one.msg.length() >= MAX_SHOW_LENGTH) {
+                vHolder.MsgTextview.setText(one.msg.substring(0, MAX_SHOW_LENGTH) + "...");
+            } else {
+                vHolder.MsgTextview.setText(one.msg);
+            }
             vHolder.lastMsgDateTextView.setText(one.lastMsgDate.toLocaleString());
 
             return convertView;
         }
-
     }
 
     @Override

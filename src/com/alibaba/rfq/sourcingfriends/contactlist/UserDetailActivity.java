@@ -91,7 +91,7 @@ public class UserDetailActivity extends Activity {
             break;
         }
         if (false == flag) {
-            user = new UserProfileDTO(userProfileName, mePhoto, "", "");
+            user = new UserProfileDTO(userProfileName, mePhoto, "--------", "---------");
             Log.i("UserDetailActivity", "There is not this user:" + userProfileName
                                         + "in the db,pls implement download service");
         }

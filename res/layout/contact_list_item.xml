@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" >
+
+    <ImageView
+        android:id="@+id/contactItemUserPhotoImageView"
+        android:layout_width="66dp"
+        android:layout_height="66dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/user_she_photo" />
+
+    <TextView
+        android:id="@+id/contactUserNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/contactItemUserPhotoImageView"
+        android:gravity="left|center_vertical"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/contactCompanyNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/contactUserNameTextView"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/contactUserNameTextView"
+        android:gravity="left|center_vertical"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/contactMainProductTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/contactItemUserPhotoImageView"
+        android:layout_alignLeft="@+id/contactCompanyNameTextView"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/contactCompanyNameTextView"
+        android:gravity="left|center_vertical"
+        android:text="TextView" />
+
+</RelativeLayout>

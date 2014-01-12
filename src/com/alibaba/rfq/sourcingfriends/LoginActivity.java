@@ -71,10 +71,10 @@ public class LoginActivity extends Activity {
             public void onClick(View view) {
 
                 // judge the internet is connect
-                if (!isWifiConnected(gContext)) {
-                    Toast.makeText(gContext, "网络未连接，登录失败，请确定已经连接网络了！...", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+//                if (!isWifiConnected(gContext) ) {
+//                    Toast.makeText(gContext, "网络未连接，登录失败，请确定已经连接网络了！...", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
                 serverIp = serverIpEditText.getText().toString();
                 account = accountEditText.getText().toString();
                 passwd = passwdEditText.getText().toString();
@@ -159,6 +159,7 @@ public class LoginActivity extends Activity {
     }
 
     public boolean isWifiConnected(Context context) {
+
         if (context != null) {
             ConnectivityManager mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo mWiFiNetworkInfo = mConnectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);

@@ -42,6 +42,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -277,27 +278,16 @@ public class IngMessageActivity extends Activity {
 
             ViewHolder viewHolder = null;
 
-            if (convertView == null) {
-                convertView = LayoutInflater.from(context).inflate(R.layout.msging_list_view_item, null);
-                viewHolder = new ViewHolder();
-
-                viewHolder.userImageView = (ImageView) convertView.findViewById(R.id.UserImageView);
-
-                viewHolder.theiMessage = (TextView) convertView.findViewById(R.id.TheiMsgTextView);
-
-                viewHolder.myImageView = (ImageView) convertView.findViewById(R.id.MyImageView);
-
-                convertView.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-
-            String msg = listMsg.get(position).msg;
-            viewHolder.theiMessage.setText(msg);
+            // if (convertView == null) {
+            viewHolder = new ViewHolder();
 
             if (listMsg.get(position).from.equalsIgnoreCase("in")) {
+                convertView = LayoutInflater.from(context).inflate(R.layout.msging_in_item, null);
+                viewHolder.theiMessage = (TextView) convertView.findViewById(R.id.TheInMsgTextView);
+                viewHolder.userImageView = (ImageView) convertView.findViewById(R.id.UserImageView);
 
                 viewHolder.userImageView.setImageBitmap(she.getPhoto());
+
                 viewHolder.userImageView.setOnClickListener(new OnClickListener() {
 
                     @Override
@@ -309,11 +299,13 @@ public class IngMessageActivity extends Activity {
                         context.startActivity(intent);
                     }
                 });
-                viewHolder.theiMessage.setGravity(Gravity.LEFT);
-                viewHolder.userImageView.setVisibility(View.VISIBLE);
-                viewHolder.myImageView.setVisibility(View.INVISIBLE);
             } else {
+                convertView = LayoutInflater.from(context).inflate(R.layout.msging_out_item, null);
+                viewHolder.theiMessage = (TextView) convertView.findViewById(R.id.TheOutMsgTextView);
+
+                viewHolder.myImageView = (ImageView) convertView.findViewById(R.id.MyImageView);
                 viewHolder.myImageView.setImageBitmap(me.getPhoto());
+
                 viewHolder.myImageView.setOnClickListener(new OnClickListener() {
 
                     @Override
@@ -325,10 +317,10 @@ public class IngMessageActivity extends Activity {
                         context.startActivity(intent);
                     }
                 });
-                viewHolder.theiMessage.setGravity(Gravity.RIGHT);
-                viewHolder.userImageView.setVisibility(View.INVISIBLE);
-                viewHolder.myImageView.setVisibility(View.VISIBLE);
             }
+
+            String msg = listMsg.get(position).msg;
+            viewHolder.theiMessage.setText(msg);
 
             return convertView;
         }
@@ -358,7 +350,8 @@ public class IngMessageActivity extends Activity {
 
                 if (msg.length() > 0) {
                     if (userName2Talk.equalsIgnoreCase(SERVER_DOMAIN)) {
-                        Toast.makeText(IngMessageActivity.this, "you can not send msg to "+SERVER_DOMAIN, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(IngMessageActivity.this, "you can not send msg to " + SERVER_DOMAIN,
+                                       Toast.LENGTH_SHORT).show();
                         return;
                     }
                     // ·¢ËÍÏûÏ¢
@@ -431,11 +424,11 @@ public class IngMessageActivity extends Activity {
         Log.i("IngMessageActivity", "on Destroy");
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.option_menu, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.option_menu, menu);
+//        return true;
+//    }
 
 }

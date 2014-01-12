@@ -3,7 +3,83 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp" >
+
+        <ImageView
+            android:id="@+id/contactItemUserPhotoImageView"
+            android:layout_width="66dp"
+            android:layout_height="66dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/notification" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/addSupplierButton"
+            android:layout_toRightOf="@+id/contactItemUserPhotoImageView"
+            android:gravity="left|center_vertical"
+            android:text="新供应商请求"
+            android:textSize="33sp" />
+
+        <Button
+            android:id="@+id/addSupplierButton"
+            android:layout_width="33dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp" >
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="22dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:text="工具" />
+
+        <TextView
+            android:id="@+id/contactUserNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/textView2"
+            android:layout_toRightOf="@+id/sfHelperPhotoImageView"
+            android:gravity="left|center_vertical"
+            android:text="采购小助手"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/sfHelperPhotoImageView"
+            android:layout_width="66dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/textView2"
+            android:background="@drawable/notification" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/contactUserNameTextView"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/contactUserNameTextView"
+            android:text="本软件主要功能是为了帮助客户介绍...." />
+    </RelativeLayout>
+
     <ListView
         android:id="@+id/ContactListViewId"
         android:layout_width="fill_parent"
